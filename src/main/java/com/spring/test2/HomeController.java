@@ -28,6 +28,7 @@ public class HomeController {
 	private Dao dao;
 	Connection conn;
 	
+	
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
@@ -85,7 +86,14 @@ public class HomeController {
 		
 		model.addAttribute("serverTime", "serverTime" );
 		
-		return "home";
+		return "login";
+	}
+	
+	@RequestMapping(value = "/test", method = RequestMethod.GET)
+	public String test(Locale locale, Model model) {
+		
+		
+		return "test";
 	}
 	
 }
