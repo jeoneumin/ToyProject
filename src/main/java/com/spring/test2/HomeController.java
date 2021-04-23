@@ -42,7 +42,6 @@ public class HomeController {
 		String formattedDate = dateFormat.format(date);
 		
 		model.addAttribute("serverTime", formattedDate );*/
-		System.out.println("start");
 		conn = dao.getCon();
 		/*String driverName = "oracle.jdbc.driver.OracleDriver";
 		String url = "jdbc:oracle:thin:@192.168.0.142:1521/orclpdb";
@@ -59,7 +58,6 @@ public class HomeController {
 			
 			pstmt = conn.prepareStatement(sql);
 			//pstmt.setString(1, "candy");
-			System.out.println("4");
 			res = pstmt.executeQuery();
 			while(res.next()) {
 				
