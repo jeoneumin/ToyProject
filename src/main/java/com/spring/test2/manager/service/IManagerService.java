@@ -12,6 +12,8 @@ public interface IManagerService {
 	//manager삭제
 	void managerDelete();
 	//manager정보 변경
-	void managerChange();
+	void managerUpdate();
+	void managerOneSelect();
+	
 
 }

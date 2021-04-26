@@ -12,5 +12,9 @@ public interface IMemberService {
 	//회원 삭제
 	void memberDelete(String id);
 	//회원 정보 변경
-	void memberChange(String id , String userName, String answer);
+	void memberUpdate(String id , String userName, String answer);
+	//전체회원조회
+	void memberAllSelect();
+	//한 회원 조회
+	void memberOneSelect();
 }
