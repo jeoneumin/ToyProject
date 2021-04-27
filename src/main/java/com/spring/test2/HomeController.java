@@ -32,8 +32,14 @@ public class HomeController {
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
+	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
+		return "home";
+	}
+	
+	@RequestMapping(value = "/DBtest", method = RequestMethod.GET)
+	public String dbTest(Locale locale, Model model) {
 		/*logger.info("Welcome home! The client locale is {}.", locale);
 		
 		Date date = new Date();
@@ -84,7 +90,7 @@ public class HomeController {
 		
 		model.addAttribute("serverTime", "serverTime" );
 		
-		return "login";
+		return "home.jsp";
 	}
 	
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
@@ -92,6 +98,21 @@ public class HomeController {
 		
 		
 		return "test";
+	}
+	
+	@RequestMapping(value = "/cart", method = RequestMethod.GET)
+	public String cart(Locale locale, Model model) {
+		return "cart";
+	}
+	
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	public String login(Locale locale, Model model) {
+		return "login";
+	}
+	
+	@RequestMapping(value = "/registration", method = RequestMethod.GET)
+	public String registration(Locale locale, Model model) {
+		return "registration";
 	}
 	
 }

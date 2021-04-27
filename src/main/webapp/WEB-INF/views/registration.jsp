@@ -1,5 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="path" value="${pageContext.request.contextPath}"/>
+<c:url value="/" var="url"/> 
 <!doctype html>
 <html lang="zxx">
 <head>
@@ -115,12 +116,18 @@
                             <div class="login_part_form_iner">
                                 <h3> <br>
                                     Please fill your info up</h3>
-                                <form class="row contact_form" action="#" method="post" novalidate="novalidate">
+                                <form class="row contact_form" action="${url }/memberJoinProc" method="post" novalidate="novalidate">
                                     <div class="col-md-12 form-group p_star">
-                                        <input type="text" class="form-control" id="name" name="name" value="" placeholder="Username">
+                                        <input type="text" class="form-control" id="memberId" name="memberId" value="" placeholder="memberID">
                                     </div>
                                     <div class="col-md-12 form-group p_star">
-                                        <input type="password" class="form-control" id="password" name="password" value="" placeholder="Password">
+                                        <input type="text" class="form-control" id="userName" name="userName" value="" placeholder="userName">
+                                    </div>
+                                    <div class="col-md-12 form-group p_star">
+                                        <input type="password" class="form-control" id="pw" name="pw" value="" placeholder="pw">
+                                    </div>
+                                    <div class="col-md-12 form-group p_star">
+                                        <input type="text" class="form-control" id="answer" name="answer" value="" placeholder="answer">
                                     </div>
                                     <div class="col-md-12 form-group">
                                         <button type="submit" value="submit" class="btn_3">

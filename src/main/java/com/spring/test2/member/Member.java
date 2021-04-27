@@ -1,33 +1,37 @@
 package com.spring.test2.member;
 
 public class Member {
-	String MemberId;
-	String UserName;
-	String Pw;
-	String Answer;
+	
+	
+	String memberId;
+	String userName;
+	String pw;
+	String answer;
 	
 	public String getMemberId() {
-		return MemberId;
+		return memberId;
 	}
 	public void setMemberId(String memberId) {
-		MemberId = memberId;
+		this.memberId = memberId;
 	}
 	public String getUserName() {
-		return UserName;
+		return userName;
 	}
 	public void setUserName(String userName) {
-		UserName = userName;
+		this.userName = userName;
 	}
 	public String getPw() {
-		return Pw;
+		return pw;
 	}
 	public void setPw(String pw) {
-		Pw = pw;
+		this.pw = pw;
 	}
 	public String getAnswer() {
-		return Answer;
+		return answer;
 	}
 	public void setAnswer(String answer) {
-		Answer = answer;
+		this.answer = answer;
 	}
+	
+	
 }
