@@ -34,10 +34,10 @@ public class HomeController {
 	 * Simply selects the home view to render by returning its name.
 	 */
 	
-	@RequestMapping(value = "/", method = RequestMethod.GET)
+	/*@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
 		return "home";
-	}
+	}*/
 	
 	@RequestMapping(value = "/DBtest", method = RequestMethod.GET)
 	public String dbTest(Locale locale, Model model) {
