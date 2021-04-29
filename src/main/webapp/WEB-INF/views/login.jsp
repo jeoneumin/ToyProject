@@ -77,7 +77,7 @@
                                     </div>
                                 </li>
                                 <li> <a href="login.html"><span class="flaticon-user"></span></a></li>
-                                <li><a href="cart.html"><span class="flaticon-shopping-cart"></span></a> </li>
+                                <li><a href="${url }cart"><span class="flaticon-shopping-cart"></span></a> </li>
                             </ul>
                         </div>
                     </div>
@@ -116,7 +116,7 @@
                                 <h2>New to our Shop?</h2>
                                 <p>There are advances being made in science and technology
                                     everyday, and a good example of this is the</p>
-                                <a href="${path}/resources/registration.html" class="btn_3">Create an Account</a>
+                                <a href="${path}/memberJoinForm" class="btn_3">Create an Account</a>
                             </div>
                         </div>
                     </div>

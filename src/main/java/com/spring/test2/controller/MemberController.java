@@ -6,6 +6,7 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.junit.runner.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,18 +16,21 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.spring.test2.dao.MemberDao;
 import com.spring.test2.dto.Member;
+import com.spring.test2.service.ManagerRegisterService;
 import com.spring.test2.service.MemberLoginService;
 import com.spring.test2.service.MemberRegisterService;
 import com.spring.test2.service.MemberService;
 
 @Controller
 public class MemberController {
-	
+
 	@Autowired
 	private MemberRegisterService mrs;
 	@Autowired
 	private MemberLoginService mls;
-	
+	@Autowired
+	private ManagerRegisterService managerRS;
+
 	@RequestMapping("/")
 	public String home(Locale locale) {
 		return "login";
@@ -37,53 +41,105 @@ public class MemberController {
 		return "registration";
 	}
 	
-	@RequestMapping(value = "memberJoinProc", method = {RequestMethod.POST} )
-	public String memberInput(Locale locale, Model model, String userName, Member member,HttpSession session) {
-		/*model.addAttribute("username", userName);
-		model.addAttribute("username2", member.getUserName());
-		model.addAttribute("memberid", member.getMemberId());
-		model.addAttribute("pw", member.getPw());
-		model.addAttribute("answer",member.getAnswer());*/
-		
-		int result = 0;
-		result = mrs.memberRegister(member);
-		if(result == 1) {
-			//회원가입 성공
-			//model.addAttribute("username", member.getUserName());
-			session.setAttribute("member", member);
-			return "cart";
-		}else {
-			//회원가입 실패
-			return "registration";
+	@RequestMapping("superManager")
+	public String goSuperManagerPage(Locale locale,HttpServletRequest req) {
+		HttpSession session = req.getSession(false);
+		Member member = (Member) session.getAttribute("member");
+		if(member != null) {
+			if(member.getManageValue() == 2) {
+				//수퍼매니저 -> 접근 허락
+				return "superManager";
+			}else if(member.getManageValue() == 1){
+				//접근불가
+				return "managerHome";
+			}else {
+				return "cart";
+			}
 		}
-		
-	}
-	
-	@RequestMapping(value = "memberLoginForm")
-	public String memberLoginForm(Locale locale) {
-		return "login";
-	}
-	
-	@RequestMapping(value = "memberLogin")
-	public String memberLogin(Locale locale, String memberId, String pw,HttpSession session) {
-		int result = mls.tryLogin(memberId,pw);
-		if(result ==1) {
-			//로그인 성공
-			session.setAttribute("memberId", memberId);
-			return "cart";
-		}else {
-			//로그인 실패
+		else {
 			return "login";
 		}
 		
 	}
 	
-	@RequestMapping(value="logout")
+	@RequestMapping("managerRegist")
+	public String managerRegist() {
+		return "managerRegistration";
+	}
+	
+	@RequestMapping("managerJoinProc")
+	public String managerJoinProc(Locale locale, Model model, Member member) {
+		
+		int result = 0;
+		result = managerRS.managerRegister(member);
+		if(result == 1) {
+			//메니저 회원가입 성공
+			return "superManager";
+		}else {
+			//매니저 회원가입 실패
+			return "managerRegistration";
+		}
+		
+	}
+
+	@RequestMapping(value = "memberJoinProc", method = { RequestMethod.POST })
+	public String memberInput(Locale locale, Model model, Member member, HttpSession session) {
+		/*
+		 * model.addAttribute("username", userName); model.addAttribute("username2",
+		 * member.getUserName()); model.addAttribute("memberid", member.getMemberId());
+		 * model.addAttribute("pw", member.getPw());
+		 * model.addAttribute("answer",member.getAnswer());
+		 */
+
+		int result = 0;
+		result = mrs.memberRegister(member);
+		if (result == 1) {
+			// 회원가입 성공
+			// model.addAttribute("username", member.getUserName());
+			return "login";
+		} else {
+			// 회원가입 실패
+			return "registration";
+		}
+
+	}
+
+	@RequestMapping(value = "memberLoginForm")
+	public String memberLoginForm(Locale locale) {
+		return "login";
+	}
+
+	@RequestMapping(value = "memberLogin")
+	public String memberLogin(Locale locale, Member member, HttpServletRequest req) {
+		Member result = mls.tryLogin(member);
+		if (result != null) {
+			// 로그인 성공
+			HttpSession session = req.getSession();
+			session.setAttribute("member", result);
+			if (result.getManageValue() == 0) {
+				//일반회원
+				return "cart";
+			}else {
+				//매니저
+				return "managerHome";
+			}
+		} else {
+			// 로그인 실패
+			return "login";
+		}
+
+	}
+
+	@RequestMapping(value = "logout")
 	public String logout(HttpSession session) {
+		session.removeAttribute("member");
 		session.invalidate();
 		return "redirect:/";
 	}
 	
-	
-	
+	@RequestMapping(value="cart")
+	public String goCart(Locale locale) {
+		return "cart";
+	}
+
 }
