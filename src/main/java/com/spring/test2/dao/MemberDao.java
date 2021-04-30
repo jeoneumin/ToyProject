@@ -75,6 +75,24 @@ public class MemberDao implements IMemberDao {
 		}, memberId);
 		return member;
 	}
+	
+	public List<Member> selectMemberRownum(int startNum, int endNum){
+		String sql = "select cs.* from (select ROWNUM rm ,member.* from member) cs where rm between ? and ?";
+		List<Member> results = jdbcTemplate.query(sql,
+				new RowMapper<Member>() {
+			@Override
+			public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
+				Member member = new Member(
+						rs.getString("memberid"),
+						rs.getString("username"),
+						rs.getString("pw"),
+						rs.getString("answer"),
+						rs.getInt("managevalue"));
+				return member;
+			}
+		},startNum,endNum);
+		return results;
+	}
 
 	@Override
 	public void memberDelete() {

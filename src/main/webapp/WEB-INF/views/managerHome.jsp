@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:url value="/" var="url" />
 <!doctype html>
@@ -91,6 +92,17 @@
 							</ul>
 						</div>
 
+						<c:if test="${member }==null">
+							<c:redirect url="${url }/login"></c:redirect>
+						</c:if>
+
+						<c:if test="${!empty member }">
+							<div class="header-right">
+								<li>${member.memberId },Hello</li>
+								<li><a href="<c:url value="/logout"/>" style="color: black">[Logout]</a></li>
+							</div>
+						</c:if>
+
 					</div>
 					<!-- Mobile Menu -->
 					<div class="col-12">
@@ -130,21 +142,34 @@
 							</tr>
 						</thead>
 						<tbody>
+							<c:if test="${!empty memberList }">
+								<c:set var="memberListItem" value="${memberList }"/>
+								<c:forEach var="item" items="${memberListItem }" begin="0" end= "${fn:length(memberList) }" step="1" varStatus="status">
+									<tr>
+										<td>${item.memberId }</td>
+										<td>${item.userName }</td>
+										<td>${item.pw }</td>
+										<td>${item.answer }</td>
+										<td>${item.manageValue }</td>
+									</tr>
+								</c:forEach>
+							</c:if>
+							<c:if test="${empty memberList }">
 							<tr>
 
 							</tr>
 							<tr>
 
 							</tr>
-							
-							
+							</c:if>
+
 						</tbody>
 					</table>
 					<div class="checkout_btn_inner float-right">
 						<a class="btn_1" href="#">Update Member</a> <a
-							class="btn_1 checkout_btn_1" href="#">Delete Member</a>
-							<a
-							class="btn_1 checkout_btn_1" href="${url }superManager">Manage Manager</a>
+							class="btn_1 checkout_btn_1" href="#">Delete Member</a> <a
+							class="btn_1 checkout_btn_1" href="${url }superManager">Manage
+							Manager</a>
 					</div>
 				</div>
 			</div>

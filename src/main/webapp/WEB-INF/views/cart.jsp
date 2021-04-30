@@ -1,4 +1,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%
+	response.setHeader("Cache-Control", "no-store");
+	response.setHeader("Pragma", "no-cache");
+	response.setDateHeader("Expires", 0);
+	if (request.getProtocol().equals("HTTP/1.1"))
+		response.setHeader("Cache-Control", "no-cache");
+%>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:url value="/" var="url" />
 <!doctype html>
@@ -91,14 +98,14 @@
 							</ul>
 						</div>
 
-						<c:if test="${member }==null">
-							<c:redirect url="${url }/login"></c:redirect>
+						<c:if test="${empty member }">
+							<c:redirect url="/"></c:redirect>
 						</c:if>
 
 						<c:if test="${!empty member }">
 							<div class="header-right">
-									<li>${member.memberId },Hello</li>
-									<li><a href="<c:url value="/logout"/>" style="color:black">[Logout]</a></li>
+								<li>${member.memberId },Hello</li>
+								<li><a href="<c:url value="/logout"/>" style="color: black">[Logout]</a></li>
 							</div>
 						</c:if>
 

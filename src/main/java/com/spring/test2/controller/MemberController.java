@@ -1,6 +1,7 @@
 package com.spring.test2.controller;
 
 import java.lang.ProcessBuilder.Redirect;
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.spring.test2.dao.MemberDao;
 import com.spring.test2.dto.Member;
 import com.spring.test2.service.ManagerRegisterService;
+import com.spring.test2.service.MemberListGet;
 import com.spring.test2.service.MemberLoginService;
 import com.spring.test2.service.MemberRegisterService;
 import com.spring.test2.service.MemberService;
@@ -30,6 +32,8 @@ public class MemberController {
 	private MemberLoginService mls;
 	@Autowired
 	private ManagerRegisterService managerRS;
+	@Autowired
+	private MemberListGet mLG;
 
 	@RequestMapping("/")
 	public String home(Locale locale) {
@@ -69,7 +73,6 @@ public class MemberController {
 	
 	@RequestMapping("managerJoinProc")
 	public String managerJoinProc(Locale locale, Model model, Member member) {
-		
 		int result = 0;
 		result = managerRS.managerRegister(member);
 		if(result == 1) {
@@ -80,6 +83,22 @@ public class MemberController {
 			return "managerRegistration";
 		}
 		
+	}
+	
+	@RequestMapping("managerHome")
+	public String managerHome(Locale locale, HttpServletRequest req,Model model) {
+		HttpSession session = req.getSession();
+		Member member = (Member) session.getAttribute("member");
+	
+		if((member == null)) {
+		
+			return "login";
+		}else {
+			if(member.getManageValue() == 0) {
+				return "cart";
+			}
+			return "managerHome";
+		}
 	}
 
 	@RequestMapping(value = "memberJoinProc", method = { RequestMethod.POST })
@@ -121,6 +140,9 @@ public class MemberController {
 				return "cart";
 			}else {
 				//매니저
+				//pageSize: 10개 , currentPage : 1페이지
+				List<Member> memberList = mLG.getMemberList(1,10);
+				session.setAttribute("memberList", memberList);
 				return "managerHome";
 			}
 		} else {
@@ -131,7 +153,7 @@ public class MemberController {
 	}
 
 	@RequestMapping(value = "logout")
-	public String logout(HttpSession session) {
+	public String logout(HttpSession session,HttpServletRequest req) {
 		session.removeAttribute("member");
 		session.invalidate();
 		return "redirect:/";

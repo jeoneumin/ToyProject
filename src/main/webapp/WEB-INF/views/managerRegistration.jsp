@@ -89,6 +89,17 @@
 										class="flaticon-shopping-cart"></span></a></li>
 							</ul>
 						</div>
+						
+						<c:if test="${member }==null">
+							<c:redirect url="${url }/login"></c:redirect>
+						</c:if>
+
+						<c:if test="${!empty member }">
+							<div class="header-right">
+									<li>${member.memberId },Hello</li>
+									<li><a href="<c:url value="/logout"/>" style="color:black">[Logout]</a></li>
+							</div>
+						</c:if>
 					</div>
 					<!-- Mobile Menu -->
 					<div class="col-12">
@@ -124,7 +135,7 @@
 					<h3>
 						<br> Please fill your info up
 					</h3>
-					<form class="row contact_form" action="${url }/managerJoinProc"
+					<form class="row contact_form" action="${url }managerJoinProc"
 						method="post" novalidate="novalidate">
 						<div class="col-md-12 form-group p_star">
 							<input type="text" class="form-control" id="memberId"
@@ -145,7 +156,7 @@
 						<div class="col-md-12 form-group">
 							<button type="submit" value="submit" class="btn_3">
 								Registraion</button>
-							<a href="${url }superManager" class="btn_3">Cancle</a> <a
+							<a href="${url }managerHome" class="btn_3">Cancle</a> <a
 								class="registraion_cancle" href="#">√Îº“</a>
 						</div>
 					</form>

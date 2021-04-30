@@ -1,4 +1,4 @@
-package com.spring.test2;
+
 
 import java.beans.Statement;
 import java.sql.Connection;
@@ -9,7 +9,7 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import org.apache.ibatis.annotations.AutomapConstructor;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +25,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class HomeController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
-	@Autowired
-	private Dao dao;
+
+
 	Connection conn;
 	
 	
@@ -49,7 +49,7 @@ public class HomeController {
 		String formattedDate = dateFormat.format(date);
 		
 		model.addAttribute("serverTime", formattedDate );*/
-		conn = dao.getCon();
+		//conn = dao.getCon();
 		/*String driverName = "oracle.jdbc.driver.OracleDriver";
 		String url = "jdbc:oracle:thin:@192.168.0.142:1521/orclpdb";
 		String userID = "testuser2";
@@ -91,7 +91,7 @@ public class HomeController {
 		
 		model.addAttribute("serverTime", "serverTime" );
 		
-		return "home.jsp";
+		return "home";
 	}
 	
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
