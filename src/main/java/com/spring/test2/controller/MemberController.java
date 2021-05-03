@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.spring.test2.dao.MemberDao;
@@ -44,59 +45,77 @@ public class MemberController {
 	public String memberRegist(Locale locale) {
 		return "registration";
 	}
-	
+
 	@RequestMapping("superManager")
-	public String goSuperManagerPage(Locale locale,HttpServletRequest req) {
+	public String goSuperManagerPage(Locale locale, HttpServletRequest req) {
 		HttpSession session = req.getSession(false);
 		Member member = (Member) session.getAttribute("member");
-		if(member != null) {
-			if(member.getManageValue() == 2) {
-				//수퍼매니저 -> 접근 허락
+		if (member != null) {
+			if (member.getManageValue() == 2) {
+				// 수퍼매니저 -> 접근 허락
 				return "superManager";
-			}else if(member.getManageValue() == 1){
-				//접근불가
+			} else if (member.getManageValue() == 1) {
+				// 접근불가
 				return "managerHome";
-			}else {
+			} else {
 				return "cart";
 			}
-		}
-		else {
+		} else {
 			return "login";
 		}
-		
+
 	}
-	
+
 	@RequestMapping("managerRegist")
 	public String managerRegist() {
 		return "managerRegistration";
 	}
-	
+
 	@RequestMapping("managerJoinProc")
 	public String managerJoinProc(Locale locale, Model model, Member member) {
 		int result = 0;
 		result = managerRS.managerRegister(member);
-		if(result == 1) {
-			//메니저 회원가입 성공
+		if (result == 1) {
+			// 메니저 회원가입 성공
 			return "superManager";
-		}else {
-			//매니저 회원가입 실패
+		} else {
+			// 매니저 회원가입 실패
 			return "managerRegistration";
 		}
-		
+
 	}
-	
+
 	@RequestMapping("managerHome")
-	public String managerHome(Locale locale, HttpServletRequest req,Model model) {
+	public String managerHome(HttpServletRequest req, Model model) {
 		HttpSession session = req.getSession();
 		Member member = (Member) session.getAttribute("member");
-	
-		if((member == null)) {
-		
+		Integer pageNum = (Integer) req.getAttribute("pageNum");
+
+		if ((member == null)) {
+
 			return "login";
-		}else {
-			if(member.getManageValue() == 0) {
+		} else {
+			if (member.getManageValue() == 0) {
 				return "cart";
 			}
+
+			List<Member> memberList;
+
+			if (pageNum == null) {
+				pageNum = 1;
+			} 
+			
+			memberList = mLG.getMemberList(pageNum);
+			
+
+			int pageScope = mLG.getPageScope();
+			int total = mLG.getTotal(); // 전체 row수
+
+			session.setAttribute("memberList", memberList);
+			session.setAttribute("scope", pageScope);
+			session.setAttribute("total", total);
+			session.setAttribute("pageNum", pageNum);
+
 			return "managerHome";
 		}
 	}
@@ -136,14 +155,10 @@ public class MemberController {
 			HttpSession session = req.getSession();
 			session.setAttribute("member", result);
 			if (result.getManageValue() == 0) {
-				//일반회원
+				// 일반회원
 				return "cart";
-			}else {
-				//매니저
-				//pageSize: 10개 , currentPage : 1페이지
-				List<Member> memberList = mLG.getMemberList(1,10);
-				session.setAttribute("memberList", memberList);
-				return "managerHome";
+			} else {
+				return "redirect:managerHome";
 			}
 		} else {
 			// 로그인 실패
@@ -153,15 +168,22 @@ public class MemberController {
 	}
 
 	@RequestMapping(value = "logout")
-	public String logout(HttpSession session,HttpServletRequest req) {
+	public String logout(HttpSession session, HttpServletRequest req) {
 		session.removeAttribute("member");
 		session.invalidate();
 		return "redirect:/";
 	}
-	
-	@RequestMapping(value="cart")
+
+	@RequestMapping(value = "cart")
 	public String goCart(Locale locale) {
 		return "cart";
+	}
+	
+	@RequestMapping(value ="test")
+	public String test(Locale locale,HttpSession session) {
+		int pageScope = mLG.getPageScope();
+		session.setAttribute("Scope", pageScope);
+		return "test";
 	}
 
 }

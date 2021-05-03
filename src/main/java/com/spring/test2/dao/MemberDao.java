@@ -76,8 +76,8 @@ public class MemberDao implements IMemberDao {
 		return member;
 	}
 	
-	public List<Member> selectMemberRownum(int startNum, int endNum){
-		String sql = "select cs.* from (select ROWNUM rm ,member.* from member) cs where rm between ? and ?";
+	public List<Member> selectMemberRownum(int offSet, int fetch){
+		String sql = "select mem.* from (select ROWNUM rm ,member.* from member where managevalue = 0) mem OFFSET ? ROWS FETCH FIRST ? ROWS ONLY";
 		List<Member> results = jdbcTemplate.query(sql,
 				new RowMapper<Member>() {
 			@Override
@@ -90,8 +90,15 @@ public class MemberDao implements IMemberDao {
 						rs.getInt("managevalue"));
 				return member;
 			}
-		},startNum,endNum);
+		},offSet,fetch);
 		return results;
+	}
+	
+	public int selectCountAll() {
+		String sql = "select count(*) from member where managevalue = ?";
+		int total;
+		total = jdbcTemplate.queryForObject(sql, Integer.class,0);
+		return total;
 	}
 
 	@Override

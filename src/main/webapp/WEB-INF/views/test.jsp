@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -8,6 +9,26 @@
 <title>Insert title here</title>
 </head>
 <body>
-	test: ${test}
+	<c:set var="total" value="17" />
+	<c:set var="pageSize" value="3" />
+	<c:set var="pre" value="false" />
+	<c:set var="next" value="false" />
+	<fmt:parseNumber var="Scope" value="${Scope }"/>
+	<fmt:parseNumber var="result" integerOnly="true"
+		value="${(total/pageSize) +1 }" />
+	test1: ${pre }
+	test2: ${next }
+	<c:set var="pre" value="true" />
+	<c:set var="next" value="true" />
+	test3: ${pre }
+	test4: ${next }
+	<%-- <c:choose>
+		<c:when test="${(total%pageSize) ne 0 }"> <h2>yes</h2> </c:when>
+		<c:otherwise> <h2>no</h2> </c:otherwise>
+	</c:choose> --%>
+	test5: ${Scope }
+	 
+	
+
 </body>
 </html>

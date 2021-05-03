@@ -13,13 +13,28 @@ public class MemberListGet {
 	@Autowired
 	private MemberDao dao;
 	
-	public List<Member> getMemberList(int currentPage, int pageSize){
+	private final int PAGESCOPE = 3;
+	private final int PAGESIZE = 3; //보여질 행의 수
+	
+	
+	public List<Member> getMemberList(int currentPage){
 		
-		int endNum = currentPage * pageSize;
-		int startNum = endNum - (pageSize-1);
-		List<Member> memberList = dao.selectMemberRownum(startNum, endNum);
+		int offSet = (currentPage-1)*PAGESIZE; 
+		int fetch = PAGESIZE;
+		
+		List<Member> memberList = dao.selectMemberRownum(offSet, fetch);
 		return memberList;
 		
+	}
+	
+	public int getPageScope() {
+		return this.PAGESCOPE;
+	}
+	
+	public int getTotal() {
+		int total = dao.selectCountAll(); 
+		
+		return total;
 	}
 
 }

@@ -1,6 +1,37 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
+<!-- pagingNavi에 필요한 변수 설정 -->
+<c:set var="scope" value="${scope}" />
+<c:set var="total" value="${total}" />
+<c:set var="pageNum" value="${pageNum}" />
+<c:set var="pre" value="false"/>
+<c:set var="next" value="false"/>
+
+<!-- 총 페이지 갯수 -->
+<c:choose>
+ <c:when test="${(total%scope) ne 0 }">
+ 	<fmt:parseNumber var = "lastPage" integerOnly="true" value="${(total/scope) + 1 }"/>
+ </c:when>
+ <c:otherwise>
+ 	<fmt:parseNumber var = "lastPage" integerOnly="true" value="${total/scope }"/>
+ </c:otherwise>
+</c:choose>
+
+<!-- 페이지 표시 범위 설정 -->
+<fmt:parseNumber var="pageNumSets" integerOnly="true" value ="${pageNum/scope }"/>
+<fmt:parseNumber integerOnly="true" var="startNum" value="${(pageNumSets*scope)+1 }"/>
+<fmt:parseNumber integerOnly="true" var="endNum" value="${(pageNumSets*scope)+scope}"/>
+
+<!-- [pre],[next] 필요 여부 -->
+<c:if test="${pageNumSets>1 }">
+ <c:set var="pre" value="true"/>
+</c:if>
+<c:if test="${(pageNumSets*scope)+scope } < ${lastPage }">
+ <c:set var="next" value="true"/>
+</c:if>
+
 <c:url value="/" var="url" />
 <!doctype html>
 <html lang="zxx">
@@ -120,7 +151,7 @@
 				<div class="row">
 					<div class="col-xl-12">
 						<div class="hero-cap text-center">
-							<h2>Member List</h2>
+							<h2>Member List </h2>
 						</div>
 					</div>
 				</div>
@@ -165,6 +196,14 @@
 
 						</tbody>
 					</table>
+					<div style="text-align: center; margin-top: 20px; margin-bottom: 20px;" >
+						<c:if test="${pre} eq 'true' "><a href="#" style="color: black">[pre]</a></c:if>
+						<c:forEach var="num" begin="${startNum }" end="${endNum }" step="1">
+							<a href="#" style="color: black">${num }</a>
+						</c:forEach>
+						<c:if test="${next} eq 'true' "><a href="#" style="color: black">[next]</a></c:if>
+					</div>
+					
 					<div class="checkout_btn_inner float-right">
 						<a class="btn_1" href="#">Update Member</a> <a
 							class="btn_1 checkout_btn_1" href="#">Delete Member</a> <a
