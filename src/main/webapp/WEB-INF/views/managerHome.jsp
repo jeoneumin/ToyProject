@@ -1,38 +1,51 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <c:set var="path" value="${pageContext.request.contextPath}" />
+<c:url var="url" value="/" />
 <!-- pagingNavi에 필요한 변수 설정 -->
 <c:set var="scope" value="${scope}" />
 <c:set var="total" value="${total}" />
 <c:set var="pageNum" value="${pageNum}" />
-<c:set var="pre" value="false"/>
-<c:set var="next" value="false"/>
+<c:set var="pre" value="false" />
+<c:set var="next" value="false" />
 
 <!-- 총 페이지 갯수 -->
 <c:choose>
- <c:when test="${(total%scope) ne 0 }">
- 	<fmt:parseNumber var = "lastPage" integerOnly="true" value="${(total/scope) + 1 }"/>
- </c:when>
- <c:otherwise>
- 	<fmt:parseNumber var = "lastPage" integerOnly="true" value="${total/scope }"/>
- </c:otherwise>
+	<c:when test="${(total%scope) ne 0 }">
+		<fmt:parseNumber var="lastPage" integerOnly="true"
+			value="${(total/scope) + 1 }" />
+	</c:when>
+	<c:otherwise>
+		<fmt:parseNumber var="lastPage" integerOnly="true"
+			value="${total/scope }" />
+	</c:otherwise>
 </c:choose>
 
 <!-- 페이지 표시 범위 설정 -->
-<fmt:parseNumber var="pageNumSets" integerOnly="true" value ="${pageNum/scope }"/>
-<fmt:parseNumber integerOnly="true" var="startNum" value="${(pageNumSets*scope)+1 }"/>
-<fmt:parseNumber integerOnly="true" var="endNum" value="${(pageNumSets*scope)+scope}"/>
+<fmt:parseNumber var="pageNumSets" integerOnly="true"
+	value="${pageNum/scope }" />
+<c:if test="${pageNum%scope == 0 }">
+	<fmt:parseNumber integerOnly="true" var="startNum"
+		value="${pageNum-(scope-1) }" />
+	<fmt:parseNumber integerOnly="true" var="endNum" value="${pageNum}" />
+</c:if>
+<c:if test="${pageNum%scope != 0 }">
+	<fmt:parseNumber integerOnly="true" var="startNum"
+		value="${(pageNumSets*scope)+1 }" />
+	<fmt:parseNumber integerOnly="true" var="endNum" value="${(pageNumSets*scope)+scope }}" />
+</c:if>
 
 <!-- [pre],[next] 필요 여부 -->
-<c:if test="${pageNumSets>1 }">
- <c:set var="pre" value="true"/>
-</c:if>
-<c:if test="${(pageNumSets*scope)+scope } < ${lastPage }">
- <c:set var="next" value="true"/>
+<c:if test="${startNum>scope }">
+	<c:set var="pre" value="true" />
 </c:if>
 
-<c:url value="/" var="url" />
+<c:if test="${endNum < lastPage }">
+	<c:set var="next" value="true" />
+</c:if>
+
+
 <!doctype html>
 <html lang="zxx">
 <head>
@@ -151,7 +164,7 @@
 				<div class="row">
 					<div class="col-xl-12">
 						<div class="hero-cap text-center">
-							<h2>Member List </h2>
+							<h2>Member List</h2>
 						</div>
 					</div>
 				</div>
@@ -174,8 +187,9 @@
 						</thead>
 						<tbody>
 							<c:if test="${!empty memberList }">
-								<c:set var="memberListItem" value="${memberList }"/>
-								<c:forEach var="item" items="${memberListItem }" begin="0" end= "${fn:length(memberList) }" step="1" varStatus="status">
+								<c:set var="memberListItem" value="${memberList }" />
+								<c:forEach var="item" items="${memberListItem }" begin="0"
+									end="${fn:length(memberList) }" step="1" varStatus="status">
 									<tr>
 										<td>${item.memberId }</td>
 										<td>${item.userName }</td>
@@ -186,24 +200,34 @@
 								</c:forEach>
 							</c:if>
 							<c:if test="${empty memberList }">
-							<tr>
+								<tr>
 
-							</tr>
-							<tr>
+								</tr>
+								<tr>
 
-							</tr>
+								</tr>
 							</c:if>
 
 						</tbody>
 					</table>
-					<div style="text-align: center; margin-top: 20px; margin-bottom: 20px;" >
-						<c:if test="${pre} eq 'true' "><a href="#" style="color: black">[pre]</a></c:if>
-						<c:forEach var="num" begin="${startNum }" end="${endNum }" step="1">
-							<a href="#" style="color: black">${num }</a>
+					<div
+						style="text-align: center; margin-top: 20px; margin-bottom: 20px;">
+						<c:if test="${pre eq 'true'}">
+							<a href="${url }managerHome?pageNum=${startNum-1}"
+								style="color: black">[pre]</a>
+						</c:if>
+						<c:forEach var="num" begin="${startNum }" end="${endNum }"
+							step="1">
+							<c:if test="${num <= lastPage }">
+								<a href="${url }managerHome?pageNum=${num}" style="color: black">${num }</a>
+							</c:if>
 						</c:forEach>
-						<c:if test="${next} eq 'true' "><a href="#" style="color: black">[next]</a></c:if>
+						<c:if test="${next eq 'true'}">
+							<a href="${url }managerHome?pageNum=${endNum+1}"
+								style="color: black">[next]</a>
+						</c:if>
 					</div>
-					
+
 					<div class="checkout_btn_inner float-right">
 						<a class="btn_1" href="#">Update Member</a> <a
 							class="btn_1 checkout_btn_1" href="#">Delete Member</a> <a
@@ -214,7 +238,7 @@
 			</div>
 	</section>
 	<!--================End Cart Area =================--> </main>
-	>
+
 	<!--? Search model Begin -->
 	<div class="search-model-box">
 		<div class="h-100 d-flex align-items-center justify-content-center">

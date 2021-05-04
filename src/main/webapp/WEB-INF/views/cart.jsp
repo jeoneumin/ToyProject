@@ -1,10 +1,9 @@
+<%@page import="com.spring.test2.dto.Member"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%
-	response.setHeader("Cache-Control", "no-store");
-	response.setHeader("Pragma", "no-cache");
-	response.setDateHeader("Expires", 0);
-	if (request.getProtocol().equals("HTTP/1.1"))
-		response.setHeader("Cache-Control", "no-cache");
+<% 
+response.setHeader("Cache-Control","no-store"); 
+response.setHeader("Pragma","no-cache"); 
+response.setDateHeader("Expires",0); 
 %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:url value="/" var="url" />
@@ -40,7 +39,6 @@
 	href="${path}/resources/assets/css/nice-select.css">
 <link rel="stylesheet" href="${path}/resources/assets/css/style.css">
 </head>
-
 <body>
 	<header>
 		<!-- Header Start -->
@@ -105,7 +103,7 @@
 						<c:if test="${!empty member }">
 							<div class="header-right">
 								<li>${member.memberId },Hello</li>
-								<li><a href="<c:url value="/logout"/>" style="color: black">[Logout]</a></li>
+								<li><form action="${url }logout"><input type="submit" value="logout"></form><a href="<c:url value="/logout"/>" style="color: black">[Logout]</a></li>
 							</div>
 						</c:if>
 

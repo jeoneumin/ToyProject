@@ -7,6 +7,7 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.junit.runner.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,6 +27,9 @@ import com.spring.test2.service.MemberService;
 
 @Controller
 public class MemberController {
+	
+	//static Logger logger = Logger.getLogger(MemberController.class);
+	
 
 	@Autowired
 	private MemberRegisterService mrs;
@@ -86,10 +90,14 @@ public class MemberController {
 	}
 
 	@RequestMapping("managerHome")
-	public String managerHome(HttpServletRequest req, Model model) {
+	public String managerHome(HttpServletRequest req, Model model, int pageNum) {
 		HttpSession session = req.getSession();
 		Member member = (Member) session.getAttribute("member");
-		Integer pageNum = (Integer) req.getAttribute("pageNum");
+		//Integer pageNum = (Integer) req.getAttribute("pageNum");
+		/*if((Integer)pageNum == null) {
+			pageNum = 1;
+		}*/
+		System.out.println("pageNum = " + pageNum);
 
 		if ((member == null)) {
 
@@ -101,9 +109,9 @@ public class MemberController {
 
 			List<Member> memberList;
 
-			if (pageNum == null) {
+			/*if (pageNum == null) {
 				pageNum = 1;
-			} 
+			}*/
 			
 			memberList = mLG.getMemberList(pageNum);
 			
@@ -158,7 +166,7 @@ public class MemberController {
 				// 일반회원
 				return "cart";
 			} else {
-				return "redirect:managerHome";
+				return "redirect:managerHome?pageNum=1";
 			}
 		} else {
 			// 로그인 실패

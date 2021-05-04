@@ -13,7 +13,7 @@
 
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<annotation-driven />
-
+	
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
 		up static resources in the ${webappRoot}/resources directory -->
 	<resources mapping="/resources/**" location="/resources/" />
@@ -28,10 +28,19 @@
 
 	<context:component-scan
 		base-package="com.spring.test2" />
-
+	
+	<!-- <beans:bean id="loginInterceptor" class="com.spring.test2.controller.MemberController"/>	
+		
 	<interceptors>
 		<interceptor>
-			<mapping path="/*" />
+			<mapping path="/test2/*"/>
+			<beans:ref bean="loginInterceptor"/>
+		</interceptor>
+	</interceptors>	 -->
+
+	<!-- <interceptors>
+		<interceptor>
+			<mapping path="/**/*" />
 
 			<exclude-mapping path="/resources/**" />
 
@@ -46,6 +55,6 @@
 			</beans:bean>
 
 		</interceptor>
-	</interceptors>
+	</interceptors> -->
 
 </beans:beans>
