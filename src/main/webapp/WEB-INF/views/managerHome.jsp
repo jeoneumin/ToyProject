@@ -1,6 +1,13 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<% response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+	response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+	response.setHeader("Expires", "0"); // Proxies.
+%>
+<c:if test="${empty member }">
+	<c:redirect url="${url }login"/>
+</c:if>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:url var="url" value="/" />
 <!-- pagingNavi에 필요한 변수 설정 -->
@@ -33,7 +40,7 @@
 <c:if test="${pageNum%scope != 0 }">
 	<fmt:parseNumber integerOnly="true" var="startNum"
 		value="${(pageNumSets*scope)+1 }" />
-	<fmt:parseNumber integerOnly="true" var="endNum" value="${(pageNumSets*scope)+scope }}" />
+	<fmt:parseNumber integerOnly="true" var="endNum" value="${(pageNumSets*scope)+scope }" />
 </c:if>
 
 <!-- [pre],[next] 필요 여부 -->
@@ -183,6 +190,7 @@
 								<th scope="col">userName</th>
 								<th scope="col">password</th>
 								<th scope="col">answer</th>
+								<th scope="col">manageValue</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -213,17 +221,22 @@
 					<div
 						style="text-align: center; margin-top: 20px; margin-bottom: 20px;">
 						<c:if test="${pre eq 'true'}">
-							<a href="${url }managerHome?pageNum=${startNum-1}"
+							<a href="${url }managerHomeProc?pageNum=${startNum-1}"
 								style="color: black">[pre]</a>
 						</c:if>
 						<c:forEach var="num" begin="${startNum }" end="${endNum }"
 							step="1">
 							<c:if test="${num <= lastPage }">
-								<a href="${url }managerHome?pageNum=${num}" style="color: black">${num }</a>
+								<c:if test="${num == pageNum }">
+									<strong><a href="${url }managerHomeProc?pageNum=${num}" style="color: black">${num }</a></strong>
+								</c:if>
+								<c:if test="${num != pageNum }">
+								<a href="${url }managerHomeProc?pageNum=${num}" style="color: black">${num }</a>
+								</c:if>
 							</c:if>
 						</c:forEach>
 						<c:if test="${next eq 'true'}">
-							<a href="${url }managerHome?pageNum=${endNum+1}"
+							<a href="${url }managerHomeProc?pageNum=${endNum+1}"
 								style="color: black">[next]</a>
 						</c:if>
 					</div>
@@ -231,7 +244,7 @@
 					<div class="checkout_btn_inner float-right">
 						<a class="btn_1" href="#">Update Member</a> <a
 							class="btn_1 checkout_btn_1" href="#">Delete Member</a> <a
-							class="btn_1 checkout_btn_1" href="${url }superManager">Manage
+							class="btn_1 checkout_btn_1" href="${url }superManagerProc" >Manage
 							Manager</a>
 					</div>
 				</div>

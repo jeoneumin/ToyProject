@@ -23,7 +23,7 @@ import com.spring.test2.service.ManagerRegisterService;
 import com.spring.test2.service.MemberListGet;
 import com.spring.test2.service.MemberLoginService;
 import com.spring.test2.service.MemberRegisterService;
-import com.spring.test2.service.MemberService;
+
 
 @Controller
 public class MemberController {
@@ -44,74 +44,105 @@ public class MemberController {
 	public String home(Locale locale) {
 		return "login";
 	}
-
-	@RequestMapping("memberJoinForm")
-	public String memberRegist(Locale locale) {
+	
+	@RequestMapping("registration")
+	public String registration() {
 		return "registration";
 	}
-
-	@RequestMapping("superManager")
-	public String goSuperManagerPage(Locale locale, HttpServletRequest req) {
-		HttpSession session = req.getSession(false);
-		Member member = (Member) session.getAttribute("member");
-		if (member != null) {
-			if (member.getManageValue() == 2) {
-				// 수퍼매니저 -> 접근 허락
-				return "superManager";
-			} else if (member.getManageValue() == 1) {
-				// 접근불가
-				return "managerHome";
-			} else {
-				return "cart";
-			}
-		} else {
-			return "login";
-		}
-
+	
+	@RequestMapping("login")
+	public String login() {
+		return "login";
 	}
-
-	@RequestMapping("managerRegist")
-	public String managerRegist() {
+	
+	@RequestMapping("cart")
+	public String cart() {
+		return "cart";
+	}
+	
+	@RequestMapping("managerHome")
+	public String managerHome() {
+		return "managerHome";
+	}
+	
+	@RequestMapping("superManager")
+	public String superManager() {
+		return "superManager";
+	}
+	
+	@RequestMapping("managerRegistration")
+	public String managerRegistration() {
 		return "managerRegistration";
 	}
+	
+	@RequestMapping(value="memberJoinProc", method = {RequestMethod.GET})
+	public String memberJoinProc(Model model) {
+		model.addAttribute("msg","폼을 먼저 작성해주세요.");
+		return "redirect:registration";
+	}
+	
+	@RequestMapping(value = "memberJoinProc", method = { RequestMethod.POST })
+	public String memberJoinProc(Model model, Member member) {
+		
 
-	@RequestMapping("managerJoinProc")
-	public String managerJoinProc(Locale locale, Model model, Member member) {
 		int result = 0;
-		result = managerRS.managerRegister(member);
+		result = mrs.memberRegister(member);
 		if (result == 1) {
-			// 메니저 회원가입 성공
-			return "superManager";
+			// 회원가입 성공
+			model.addAttribute("msg", "회원가입 성공");
+			return "redirect:login";
 		} else {
-			// 매니저 회원가입 실패
-			return "managerRegistration";
+			// 회원가입 실패
+			model.addAttribute("msg", "회원가입에 실패했습니다. 다시 시도해주세요.(아이디중복)");
+			return "redirect:registration";
 		}
 
 	}
+	
 
-	@RequestMapping("managerHome")
-	public String managerHome(HttpServletRequest req, Model model, int pageNum) {
+	@RequestMapping(value = "memberLoginProc", method = { RequestMethod.GET })
+	public String memberLoginProc() {
+		return "redirect:login";
+	}
+	
+	@RequestMapping(value = "memberLoginProc", method = { RequestMethod.POST })
+	public String memberLoginProc(Model model,Member member, HttpServletRequest req) {
+		Member result = mls.tryLogin(member);
+		if (result != null) {
+			// 로그인 성공
+			HttpSession session = req.getSession();
+			session.setAttribute("member", result);
+			if (result.getManageValue() == 0) {
+				// 일반회원
+				return "redirect:cart";
+			} else {
+				return "redirect:managerHomeProc?pageNum=1";
+			}
+		} else {
+			// 로그인 실패
+			model.addAttribute("msg","아이디와 비밀번호를 다시 확인해주세요." );
+			return "redirect:login";
+		}
+
+	}
+	
+	
+	
+	@RequestMapping(value="managerHomeProc")
+	public String managerHomeProc(HttpServletRequest req, Model model, int pageNum) {
 		HttpSession session = req.getSession();
 		Member member = (Member) session.getAttribute("member");
-		//Integer pageNum = (Integer) req.getAttribute("pageNum");
-		/*if((Integer)pageNum == null) {
-			pageNum = 1;
-		}*/
-		System.out.println("pageNum = " + pageNum);
 
 		if ((member == null)) {
 
-			return "login";
+			return "redirect:login";
 		} else {
 			if (member.getManageValue() == 0) {
-				return "cart";
+				return "redirect:cart";
 			}
 
 			List<Member> memberList;
 
-			/*if (pageNum == null) {
-				pageNum = 1;
-			}*/
 			
 			memberList = mLG.getMemberList(pageNum);
 			
@@ -124,74 +155,67 @@ public class MemberController {
 			session.setAttribute("total", total);
 			session.setAttribute("pageNum", pageNum);
 
-			return "managerHome";
+			return "redirect:managerHome";
 		}
 	}
 
-	@RequestMapping(value = "memberJoinProc", method = { RequestMethod.POST })
-	public String memberInput(Locale locale, Model model, Member member, HttpSession session) {
-		/*
-		 * model.addAttribute("username", userName); model.addAttribute("username2",
-		 * member.getUserName()); model.addAttribute("memberid", member.getMemberId());
-		 * model.addAttribute("pw", member.getPw());
-		 * model.addAttribute("answer",member.getAnswer());
-		 */
-
-		int result = 0;
-		result = mrs.memberRegister(member);
-		if (result == 1) {
-			// 회원가입 성공
-			// model.addAttribute("username", member.getUserName());
-			return "login";
-		} else {
-			// 회원가입 실패
-			return "registration";
-		}
-
-	}
-
-	@RequestMapping(value = "memberLoginForm")
-	public String memberLoginForm(Locale locale) {
-		return "login";
-	}
-
-	@RequestMapping(value = "memberLogin")
-	public String memberLogin(Locale locale, Member member, HttpServletRequest req) {
-		Member result = mls.tryLogin(member);
-		if (result != null) {
-			// 로그인 성공
-			HttpSession session = req.getSession();
-			session.setAttribute("member", result);
-			if (result.getManageValue() == 0) {
-				// 일반회원
-				return "cart";
+	@RequestMapping("superManagerProc")
+	public String superManagerProc(Locale locale, HttpServletRequest req) {
+		HttpSession session = req.getSession(false);
+		Member member = (Member) session.getAttribute("member");
+		if (member != null) {
+			if (member.getManageValue() == 2) {
+				// 수퍼매니저 -> 접근 허락
+				return "redirect:superManager";
+			} else if (member.getManageValue() == 1) {
+				// 접근불가
+				return "redirect:managerHomeProc?pageNum=1";
 			} else {
-				return "redirect:managerHome?pageNum=1";
+				return "redirect:cart";
 			}
 		} else {
-			// 로그인 실패
-			return "login";
+			return "redirect:login";
+		}
+
+	}
+	
+
+	@RequestMapping("managerRegistProc")
+	public String managerRegistProc(Locale locale, Model model, Member member) {
+		int result = 0;
+		result = managerRS.managerRegister(member);
+		if (result == 1) {
+			// 메니저 회원가입 성공
+			model.addAttribute("msg", "회원가입 성공");
+			return "redirect:superManager";
+		} else {
+			// 매니저 회원가입 실패
+			model.addAttribute("msg", "회원가입 실패");
+			return "redirect:managerRegistration";
 		}
 
 	}
 
+	
+	/*로그아웃 처리*/
 	@RequestMapping(value = "logout")
 	public String logout(HttpSession session, HttpServletRequest req) {
 		session.removeAttribute("member");
 		session.invalidate();
-		return "redirect:/";
+		return "redirect:login";
 	}
 
-	@RequestMapping(value = "cart")
-	public String goCart(Locale locale) {
-		return "cart";
-	}
+	
 	
 	@RequestMapping(value ="test")
-	public String test(Locale locale,HttpSession session) {
-		int pageScope = mLG.getPageScope();
-		session.setAttribute("Scope", pageScope);
-		return "test";
+	public String test(Locale locale,HttpSession session,Model model) {
+		model.addAttribute("msg", "ox");
+		return "redirect:test2";
+	}
+	
+	@RequestMapping(value ="test2")
+	public String test2(Locale locale,HttpSession session,String msg) {
+		return "test2";
 	}
 
 }

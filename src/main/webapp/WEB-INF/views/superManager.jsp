@@ -1,4 +1,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<% response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+	response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+	response.setHeader("Expires", "0"); // Proxies.
+%>
+<c:if test="${empty member }">
+	<c:redirect url="${url }login"/>
+</c:if>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:url value="/" var="url" />
 <!doctype html>
@@ -32,6 +39,12 @@
 <link rel="stylesheet"
 	href="${path}/resources/assets/css/nice-select.css">
 <link rel="stylesheet" href="${path}/resources/assets/css/style.css">
+
+<c:if test="${!empty msg }">
+	<script type="text/javascript">
+		alert("${msg}");
+	</script>
+</c:if>
 </head>
 
 <body>
@@ -90,6 +103,17 @@
 										class="flaticon-shopping-cart"></span></a></li>
 							</ul>
 						</div>
+						
+						<c:if test="${member }==null">
+							<c:redirect url="${url }/login"></c:redirect>
+						</c:if>
+
+						<c:if test="${!empty member }">
+							<div class="header-right">
+								<li>${member.memberId },Hello</li>
+								<li><a href="<c:url value="/logout"/>" style="color: black">[Logout]</a></li>
+							</div>
+						</c:if>
 
 					</div>
 					<!-- Mobile Menu -->
@@ -144,7 +168,7 @@
 						<a class="btn_1" href="#">Update Manager</a> <a
 							class="btn_1 checkout_btn_1" href="#">Delete Manager</a>
 							<a
-							class="btn_1 checkout_btn_1" href="${url }managerRegist">Insert Manager</a>
+							class="btn_1 checkout_btn_1" href="${url }managerRegistration">Insert Manager</a>
 					</div>
 				</div>
 			</div>

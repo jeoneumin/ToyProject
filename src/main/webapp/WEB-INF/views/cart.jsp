@@ -1,16 +1,19 @@
 <%@page import="com.spring.test2.dto.Member"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<% 
-response.setHeader("Cache-Control","no-store"); 
-response.setHeader("Pragma","no-cache"); 
-response.setDateHeader("Expires",0); 
+<% response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+	response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+	response.setHeader("Expires", "0"); // Proxies.
 %>
-<c:set var="path" value="${pageContext.request.contextPath}" />
 <c:url value="/" var="url" />
+<c:set var="path" value="${pageContext.request.contextPath}" />
+
 <!doctype html>
 <html lang="zxx">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Expires" content="0">
+ <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
 <title>Watch shop | eCommers</title>
 <meta name="description" content="">
@@ -103,7 +106,7 @@ response.setDateHeader("Expires",0);
 						<c:if test="${!empty member }">
 							<div class="header-right">
 								<li>${member.memberId },Hello</li>
-								<li><form action="${url }logout"><input type="submit" value="logout"></form><a href="<c:url value="/logout"/>" style="color: black">[Logout]</a></li>
+								<li><a href="<c:url value="/logout"/>" style="color: black">[Logout]</a></li>
 							</div>
 						</c:if>
 

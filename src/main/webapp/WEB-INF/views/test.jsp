@@ -9,7 +9,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<c:set var="total" value="17" />
+	<%-- <c:set var="total" value="17" />
 	<c:set var="pageSize" value="3" />
 	<c:set var="pre" value="false" />
 	<c:set var="next" value="false" />
@@ -19,13 +19,30 @@
 	
 	<c:set var="pre" value="true" />
 	<c:set var="next" value="true" />
-	<%-- <c:choose>
+	<c:choose>
 		<c:when test="${(total%pageSize) ne 0 }"> <h2>yes</h2> </c:when>
 		<c:otherwise> <h2>no</h2> </c:otherwise>
-	</c:choose> --%>
+	</c:choose>
 	test5: ${Scope } <br>
 	<c:if test="${pre } eq 'true'"> true</c:if>
-	<c:if test="${pre eq 'true'}"> true</c:if>
+	<c:if test="${pre eq 'true'}"> true</c:if> --%>
+	
+	<script type="text/javascript">
+	function checkform() {
+		if (document.frm.memberId.value == "" ) {
+			document.frm.memberId.focus();
+			alert("아이디를 입력해주세요");
+			return false;
+		}
+		
+	}
+	</script>
+	
+	<form action="#" method="post" name="frm" onsubmit="return checkform()">
+		아이디 : <input type="text" name="memberId" >
+		<input type="submit" value="제출">
+	
+	</form>
 	 
 	
 

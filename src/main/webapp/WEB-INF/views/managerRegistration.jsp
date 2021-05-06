@@ -1,4 +1,10 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<% response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+	response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+	response.setHeader("Expires", "0"); // Proxies.
+%>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:url value="/" var="url" />
 <!doctype html>
@@ -32,6 +38,37 @@
 <link rel="stylesheet"
 	href="${path}/resources/assets/css/nice-select.css">
 <link rel="stylesheet" href="${path}/resources/assets/css/style.css">
+
+<c:if test="${!empty msg }">
+	<script type="text/javascript">
+		alert("${msg}");
+	</script>
+</c:if>
+
+<script type="text/javascript">
+	function checkform() {
+		if (document.frm.memberId.value == "" ) {
+			document.frm.memberId.focus();
+			alert("아이디를 입력해주세요");
+			return false;
+		}
+		else if(document.frm.userName.value == "" ) {
+			document.frm.userName.focus();
+			alert("이름을 입력해주세요");
+			return false;
+		}
+		else if (document.frm.pw.value == "" ) {
+			document.frm.pw.focus();
+			alert("비밀번호를 입력해주세요");
+			return false;
+		}
+		else if (document.frm.answer.value == "" ) {
+			document.frm.answer.focus();
+			alert("답변을 입력해주세요");
+			return false;
+		}
+	}
+</script>
 </head>
 <body>
 	<header>
@@ -135,8 +172,8 @@
 					<h3>
 						<br> Please fill your info up
 					</h3>
-					<form class="row contact_form" action="${url }managerJoinProc"
-						method="post" novalidate="novalidate">
+					<form class="row contact_form" action="${url }managerRegistProc"
+						method="post" novalidate="novalidate" name="frm" onsubmit="return checkform()">
 						<div class="col-md-12 form-group p_star">
 							<input type="text" class="form-control" id="memberId"
 								name="memberId" value="" placeholder="memberID">
@@ -156,8 +193,8 @@
 						<div class="col-md-12 form-group">
 							<button type="submit" value="submit" class="btn_3">
 								Registraion</button>
-							<a href="${url }managerHome" class="btn_3">Cancle</a> <a
-								class="registraion_cancle" href="#">���</a>
+							<a href="${url }superManagerProc" class="btn_3">Cancle</a> <a
+								class="registraion_cancle" href="#">���</a>
 						</div>
 					</form>
 				</div>

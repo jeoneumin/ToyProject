@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 import com.spring.test2.dto.Member;
 
 @Repository
-public class MemberDao implements IMemberDao {
+public class MemberDao  {
 
 	private JdbcTemplate jdbcTemplate;
 
@@ -23,19 +23,32 @@ public class MemberDao implements IMemberDao {
 		jdbcTemplate = new JdbcTemplate(datasource);
 	}
 
-	@Override
 	public int memberInsert(Member member) {
 		// TODO Auto-generated method stub
 		String sql = "insert into member values(?,?,?,?,?)";
-		int result = jdbcTemplate.update(sql, member.getMemberId(), member.getUserName(), member.getPw(),
-				member.getAnswer(), 0);
+		int result;
+		try {
+			result = jdbcTemplate.update(sql, member.getMemberId(), member.getUserName(), member.getPw(),
+					member.getAnswer(), 0);
+		} catch (Exception e) {
+			// TODO: handle exception
+			result = 0;
+		}
+		
 		return result;
 	}
 
 	public int managerInsert(Member member) {
 		String sql = "insert into member values(?,?,?,?,?)";
-		int result = jdbcTemplate.update(sql, member.getMemberId(), member.getUserName(), member.getPw(),
-				member.getAnswer(), 1);
+		int result;
+		try {
+			result = jdbcTemplate.update(sql, member.getMemberId(), member.getUserName(), member.getPw(),
+					member.getAnswer(), 1);
+		} catch (Exception e) {
+			// TODO: handle exception
+			result = 0;
+		}
+		
 		return result;
 	}
 
@@ -101,37 +114,8 @@ public class MemberDao implements IMemberDao {
 		return total;
 	}
 
-	@Override
-	public void memberDelete() {
-		// TODO Auto-generated method stub
 
-	}
 
-	@Override
-	public void memberUpdate() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public Member memberSelect() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Member> memberAllSelect() {
-		// TODO Auto-generated method stub
-
-		List<Member> results = jdbcTemplate.query("select * from MEMBER", new RowMapper<Member>() {
-			@Override
-			public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
-				Member member = new Member(rs.getString("memberid"), rs.getString("username"), rs.getString("pw"),
-						rs.getString("answer"));
-				return member;
-			}
-		});
-		return results;
-	}
+	
 
 }

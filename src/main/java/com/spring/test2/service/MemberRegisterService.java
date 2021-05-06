@@ -17,7 +17,6 @@ public class MemberRegisterService {
 		if(result == 1) {
 			return 1;
 		}else {
-			System.out.println("memberRegister() 실패");
 			return 0;
 		}
 	}

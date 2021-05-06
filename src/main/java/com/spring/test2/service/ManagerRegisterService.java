@@ -13,10 +13,16 @@ public class ManagerRegisterService {
 	
 	public int managerRegister(Member member) {
 		String memberId = dao.searchMemberIdByMemberId(member.getMemberId());
+		int result;
 		if(memberId ==null) {
 			//아이디 중복없음
-			dao.managerInsert(member);
-			return 1;
+			result = dao.managerInsert(member);
+			if(result == 1) {
+				return 1;
+			}else {
+				return 0;
+			}
+			
 		}else {
 			//아이디 중복있음
 			return 0;
