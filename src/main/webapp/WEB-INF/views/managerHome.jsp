@@ -137,8 +137,8 @@
 										<span class="flaticon-search"></span>
 									</div>
 								</li>
-								<li><a href="login.html"><span class="flaticon-user"></span></a></li>
-								<li><a href="cart.html"><span
+								<li><a href="#"><span class="flaticon-user"></span></a></li>
+								<li><a href="#"><span
 										class="flaticon-shopping-cart"></span></a></li>
 							</ul>
 						</div>

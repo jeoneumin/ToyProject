@@ -41,7 +41,7 @@ public class MemberController {
 	private MemberListGet mLG;
 
 	@RequestMapping("/")
-	public String home(Locale locale) {
+	public String home() {
 		return "login";
 	}
 	
@@ -82,18 +82,20 @@ public class MemberController {
 	}
 	
 	@RequestMapping(value = "memberJoinProc", method = { RequestMethod.POST })
-	public String memberJoinProc(Model model, Member member) {
+	public String memberJoinProc(Model model, Member member,HttpSession session) {
 		
 
 		int result = 0;
 		result = mrs.memberRegister(member);
 		if (result == 1) {
 			// 회원가입 성공
-			model.addAttribute("msg", "회원가입 성공");
+			//model.addAttribute("msg", "success");
+			//session.setAttribute("msg", "success");
 			return "redirect:login";
 		} else {
 			// 회원가입 실패
-			model.addAttribute("msg", "회원가입에 실패했습니다. 다시 시도해주세요.(아이디중복)");
+			//model.addAttribute("msg", "fail");
+			//session.setAttribute("msg","fail");
 			return "redirect:registration";
 		}
 
@@ -160,7 +162,7 @@ public class MemberController {
 	}
 
 	@RequestMapping("superManagerProc")
-	public String superManagerProc(Locale locale, HttpServletRequest req) {
+	public String superManagerProc( HttpServletRequest req) {
 		HttpSession session = req.getSession(false);
 		Member member = (Member) session.getAttribute("member");
 		if (member != null) {
@@ -181,7 +183,7 @@ public class MemberController {
 	
 
 	@RequestMapping("managerRegistProc")
-	public String managerRegistProc(Locale locale, Model model, Member member) {
+	public String managerRegistProc(Model model, Member member) {
 		int result = 0;
 		result = managerRS.managerRegister(member);
 		if (result == 1) {
@@ -206,16 +208,5 @@ public class MemberController {
 	}
 
 	
-	
-	@RequestMapping(value ="test")
-	public String test(Locale locale,HttpSession session,Model model) {
-		model.addAttribute("msg", "ox");
-		return "redirect:test2";
-	}
-	
-	@RequestMapping(value ="test2")
-	public String test2(Locale locale,HttpSession session,String msg) {
-		return "test2";
-	}
 
 }
