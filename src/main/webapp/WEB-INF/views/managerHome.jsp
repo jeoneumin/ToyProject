@@ -17,6 +17,7 @@
 <c:set var="pre" value="false" />
 <c:set var="next" value="false" />
 
+
 <!-- 총 페이지 갯수 -->
 <c:choose>
 	<c:when test="${(total%scope) ne 0 }">
@@ -183,7 +184,7 @@
 		<div class="container">
 			<div class="cart_inner">
 				<div class="table-responsive">
-					<table class="table">
+					<table class="table" id="memTable">
 						<thead>
 							<tr>
 								<th scope="col">memberId</th>
@@ -242,10 +243,10 @@
 					</div>
 
 					<div class="checkout_btn_inner float-right">
-						<a class="btn_1" href="#">Update Member</a> <a
-							class="btn_1 checkout_btn_1" href="#">Delete Member</a> <a
-							class="btn_1 checkout_btn_1" href="${url }superManagerProc" >Manage
-							Manager</a>
+						<button class="btn_1" onclick="checkbox();">Update Member</button> <button
+							class="btn_1 checkout_btn_1" onclick="#">Delete Member</button> <button
+							class="btn_1 checkout_btn_1" onclick="location.href='${url }superManagerProc';" >Manage
+							Manager</button>
 					</div>
 				</div>
 			</div>
@@ -299,6 +300,15 @@
 	<!-- Jquery Plugins, main Jquery -->
 	<script src="./${path}/resources/assets/js/plugins.js"></script>
 	<script src="./${path}/resources/assets/js/main.js"></script>
+	
+	<!-- 사용자정의함수 -->
+	<script>
+	function checkbox() {
+		var table = document.getElementById('memTable');
+		var newCell = table.rows[i].insertCell(0);
+		newCell.innerText = 'New';
+	}
+	</script>
 
 </body>
 </html>

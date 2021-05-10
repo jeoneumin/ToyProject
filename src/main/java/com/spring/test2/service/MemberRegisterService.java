@@ -11,14 +11,10 @@ public class MemberRegisterService {
 	@Autowired
 	private MemberDao memberDao;
 	
-	public int memberRegister(Member member) {
-		int result = 0;
-		result = memberDao.memberInsert(member);
-		if(result == 1) {
-			return 1;
-		}else {
-			return 0;
-		}
+	public boolean memberRegister(Member member) {
+		boolean isSuccess;
+		isSuccess = memberDao.memberInsert(member);
+		return isSuccess;
 	}
 
 }

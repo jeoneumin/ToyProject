@@ -1,4 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <% response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
 	response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
 	response.setHeader("Expires", "0"); // Proxies.
@@ -8,6 +10,49 @@
 </c:if>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:url value="/" var="url" />
+<!-- pagingNavi에 필요한 변수 설정 -->
+<c:set var="scope" value="${scope}" />
+<c:set var="total" value="${total}" />
+<c:set var="pageNum" value="${pageNum}" />
+<c:set var="pre" value="false" />
+<c:set var="next" value="false" />
+
+<!-- 총 페이지 갯수 -->
+<c:choose>
+	<c:when test="${(total%scope) ne 0 }">
+		<fmt:parseNumber var="lastPage" integerOnly="true"
+			value="${(total/scope) + 1 }" />
+	</c:when>
+	<c:otherwise>
+		<fmt:parseNumber var="lastPage" integerOnly="true"
+			value="${total/scope }" />
+	</c:otherwise>
+</c:choose>
+
+<!-- 페이지 표시 범위 설정 -->
+<fmt:parseNumber var="pageNumSets" integerOnly="true"
+	value="${pageNum/scope }" />
+<c:if test="${pageNum%scope == 0 }">
+	<fmt:parseNumber integerOnly="true" var="startNum"
+		value="${pageNum-(scope-1) }" />
+	<fmt:parseNumber integerOnly="true" var="endNum" value="${pageNum}" />
+</c:if>
+<c:if test="${pageNum%scope != 0 }">
+	<fmt:parseNumber integerOnly="true" var="startNum"
+		value="${(pageNumSets*scope)+1 }" />
+	<fmt:parseNumber integerOnly="true" var="endNum"
+		value="${(pageNumSets*scope)+scope }" />
+</c:if>
+
+<!-- [pre],[next] 필요 여부 -->
+<c:if test="${startNum>scope }">
+	<c:set var="pre" value="true" />
+</c:if>
+
+<c:if test="${endNum < lastPage }">
+	<c:set var="next" value="true" />
+</c:if>
+
 <!doctype html>
 <html lang="zxx">
 <head>
@@ -149,21 +194,61 @@
 							<tr>
 								<th scope="col">memberId</th>
 								<th scope="col">userName</th>
-								<th scope="col">password</th>
+								<th scope="col">pw</th>
 								<th scope="col">answer</th>
+								<th scope="col">manageValue</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
+							<c:if test="${!empty managerList }">
+								<c:set var="managerListItem" value="${managerList }" />
+								<c:forEach var="item" items="${managerListItem }" begin="0"
+									end="${fn:length(managerList) }" step="1" varStatus="status">
+									<tr>
+										<td>${item.memberId }</td>
+										<td>${item.userName }</td>
+										<td>${item.pw }</td>
+										<td>${item.answer }</td>
+										<td>${item.manageValue }</td>
+									</tr>
+								</c:forEach>
+							</c:if>
+							<c:if test="${empty managerList }">
+								<tr>
 
-							</tr>
-							<tr>
+								</tr>
+								<tr>
 
-							</tr>
-							
-							
+								</tr>
+							</c:if>
+
+
 						</tbody>
 					</table>
+					
+					<div
+						style="text-align: center; margin-top: 20px; margin-bottom: 20px;">
+						<c:if test="${pre eq 'true'}">
+							<a href="${url }managerHomeProc?pageNum=${startNum-1}"
+								style="color: black">[pre]</a>
+						</c:if>
+						<c:forEach var="num" begin="${startNum }" end="${endNum }"
+							step="1">
+							<c:if test="${num <= lastPage }">
+								<c:if test="${num == pageNum }">
+									<strong><a href="${url }managerHomeProc?pageNum=${num}" style="color: black">${num }</a></strong>
+								</c:if>
+								<c:if test="${num != pageNum }">
+								<a href="${url }managerHomeProc?pageNum=${num}" style="color: black">${num }</a>
+								</c:if>
+							</c:if>
+						</c:forEach>
+						<c:if test="${next eq 'true'}">
+							<a href="${url }managerHomeProc?pageNum=${endNum+1}"
+								style="color: black">[next]</a>
+						</c:if>
+					</div>
+					
 					<div class="checkout_btn_inner float-right">
 						<a class="btn_1" href="#">Update Manager</a> <a
 							class="btn_1 checkout_btn_1" href="#">Delete Manager</a>

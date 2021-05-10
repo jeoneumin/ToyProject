@@ -23,33 +23,45 @@ public class MemberDao  {
 		jdbcTemplate = new JdbcTemplate(datasource);
 	}
 
-	public int memberInsert(Member member) {
+	public boolean memberInsert(Member member) {
 		// TODO Auto-generated method stub
 		String sql = "insert into member values(?,?,?,?,?)";
 		int result;
+		boolean isSuccess;
 		try {
 			result = jdbcTemplate.update(sql, member.getMemberId(), member.getUserName(), member.getPw(),
-					member.getAnswer(), 0);
+					member.getAnswer(), "member");
+			if(result == 1) {
+				isSuccess = true;
+			} else {
+				isSuccess = false;
+			}
 		} catch (Exception e) {
 			// TODO: handle exception
-			result = 0;
+			isSuccess = false;
 		}
 		
-		return result;
+		return isSuccess;
 	}
 
-	public int managerInsert(Member member) {
+	public boolean managerInsert(Member member) {
 		String sql = "insert into member values(?,?,?,?,?)";
 		int result;
+		boolean isSuccess;
 		try {
 			result = jdbcTemplate.update(sql, member.getMemberId(), member.getUserName(), member.getPw(),
-					member.getAnswer(), 1);
+					member.getAnswer(), "manager");
+			if(result ==1) {
+				isSuccess = true;
+			}else {
+				isSuccess = false;
+			}
 		} catch (Exception e) {
 			// TODO: handle exception
-			result = 0;
+			isSuccess = false;
 		}
 		
-		return result;
+		return isSuccess;
 	}
 
 	public String searchPwByMemberId(String memberId) {
@@ -82,7 +94,7 @@ public class MemberDao  {
 			@Override
 			public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
 				Member member = new Member(rs.getString("memberid"), rs.getString("username"), rs.getString("pw"),
-						rs.getString("answer"), rs.getInt("managevalue"));
+						rs.getString("answer"), rs.getString("managevalue"));
 				return member;
 			}
 		}, memberId);
@@ -90,7 +102,8 @@ public class MemberDao  {
 	}
 	
 	public List<Member> selectMemberRownum(int offSet, int fetch){
-		String sql = "select mem.* from (select ROWNUM rm ,member.* from member where managevalue = 0) mem OFFSET ? ROWS FETCH FIRST ? ROWS ONLY";
+		String sql = "select mem.* from (select ROWNUM rm ,member.* from member where managevalue = ?) mem "
+				+ "OFFSET ? ROWS FETCH FIRST ? ROWS ONLY";
 		List<Member> results = jdbcTemplate.query(sql,
 				new RowMapper<Member>() {
 			@Override
@@ -100,22 +113,45 @@ public class MemberDao  {
 						rs.getString("username"),
 						rs.getString("pw"),
 						rs.getString("answer"),
-						rs.getInt("managevalue"));
+						rs.getString("managevalue"));
 				return member;
 			}
-		},offSet,fetch);
+		},"member",offSet,fetch);
 		return results;
 	}
 	
-	public int selectCountAll() {
+	public int selectMemberCountAll() {
 		String sql = "select count(*) from member where managevalue = ?";
 		int total;
-		total = jdbcTemplate.queryForObject(sql, Integer.class,0);
+		total = jdbcTemplate.queryForObject(sql, Integer.class,"member");
 		return total;
 	}
-
-
-
 	
+	
+	public List<Member> selectManagerRownum(int offSet, int fetch){
+		String sql = "select mem.* from (select ROWNUM rm ,member.* from member where managevalue = ?) mem "
+				+ "OFFSET ? ROWS FETCH FIRST ? ROWS ONLY";
+		List<Member> results = jdbcTemplate.query(sql,
+				new RowMapper<Member>() {
+			@Override
+			public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
+				Member member = new Member(
+						rs.getString("memberid"),
+						rs.getString("username"),
+						rs.getString("pw"),
+						rs.getString("answer"),
+						rs.getString("managevalue"));
+				return member;
+			}
+		},"manager",offSet,fetch);
+		return results;
+	}
+	
+	public int selectManagerCountAll() {
+		String sql = "select count(*) from member where managevalue = ?";
+		int total;
+		total = jdbcTemplate.queryForObject(sql, Integer.class,"manager");
+		return total;
+	}
 
 }

@@ -11,21 +11,18 @@ public class ManagerRegisterService {
 	@Autowired
 	private MemberDao dao;
 	
-	public int managerRegister(Member member) {
+	public boolean managerRegister(Member member) {
 		String memberId = dao.searchMemberIdByMemberId(member.getMemberId());
-		int result;
+		boolean isSuccess =false;
 		if(memberId ==null) {
 			//아이디 중복없음
-			result = dao.managerInsert(member);
-			if(result == 1) {
-				return 1;
-			}else {
-				return 0;
-			}
+			isSuccess = dao.managerInsert(member);
+			return isSuccess;
+			
 			
 		}else {
 			//아이디 중복있음
-			return 0;
+			return isSuccess;
 		}
 	}
 }

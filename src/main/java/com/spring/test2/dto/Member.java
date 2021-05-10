@@ -7,13 +7,13 @@ public class Member {
 	String userName;
 	String pw;
 	String answer;
-	int manageValue;
+	String manageValue;
 	
 	public Member() {
 		
 	}
 	
-	public Member(String memberId, String userName, String pw, String answer, int manageValue) {
+	public Member(String memberId, String userName, String pw, String answer, String manageValue) {
 		// TODO Auto-generated constructor stub
 		this.memberId = memberId;
 		this.userName = userName;
@@ -54,11 +54,11 @@ public class Member {
 		this.answer = answer;
 	}
 
-	public int getManageValue() {
+	public String getManageValue() {
 		return manageValue;
 	}
 
-	public void setManageValue(int manageValue) {
+	public void setManageValue(String manageValue) {
 		this.manageValue = manageValue;
 	}
 	

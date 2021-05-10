@@ -9,22 +9,22 @@ import com.spring.test2.dao.MemberDao;
 import com.spring.test2.dto.Member;
 
 @Service
-public class MemberListGet {
+public class ManagerListGet {
+
 	@Autowired
 	private MemberDao dao;
-	
+
 	private final int PAGESCOPE = 3;
-	private final int PAGESIZE = 3; //보여질 행의 수
-	
-	
-	public List<Member> getMemberList(int currentPage){
-		
-		int offSet = (currentPage-1)*PAGESIZE; 
+	private final int PAGESIZE = 3;
+
+	public List<Member> getManagerList(int currentPage) {
+
+		int offSet = (currentPage - 1) * PAGESIZE;
 		int fetch = PAGESIZE;
-		
-		List<Member> memberList = dao.selectMemberRownum(offSet, fetch);
-		return memberList;
-		
+
+		List<Member> managerList = dao.selectManagerRownum(offSet, fetch);
+		return managerList;
+
 	}
 	
 	public int getPageScope() {
@@ -32,9 +32,8 @@ public class MemberListGet {
 	}
 	
 	public int getTotal() {
-		int total = dao.selectMemberCountAll(); 
+		int total = dao.selectManagerCountAll(); 
 		
 		return total;
 	}
-
 }

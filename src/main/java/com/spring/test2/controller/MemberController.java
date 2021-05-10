@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.spring.test2.dao.MemberDao;
 import com.spring.test2.dto.Member;
+import com.spring.test2.service.ManagerListGet;
 import com.spring.test2.service.ManagerRegisterService;
 import com.spring.test2.service.MemberListGet;
 import com.spring.test2.service.MemberLoginService;
@@ -39,6 +40,8 @@ public class MemberController {
 	private ManagerRegisterService managerRS;
 	@Autowired
 	private MemberListGet mLG;
+	@Autowired
+	private ManagerListGet maLG;
 
 	@RequestMapping("/")
 	public String home() {
@@ -85,9 +88,9 @@ public class MemberController {
 	public String memberJoinProc(Model model, Member member,HttpSession session) {
 		
 
-		int result = 0;
-		result = mrs.memberRegister(member);
-		if (result == 1) {
+		boolean isSuccess;
+		isSuccess = mrs.memberRegister(member);
+		if (isSuccess) {
 			// 회원가입 성공
 			//model.addAttribute("msg", "success");
 			//session.setAttribute("msg", "success");
@@ -114,11 +117,11 @@ public class MemberController {
 			// 로그인 성공
 			HttpSession session = req.getSession();
 			session.setAttribute("member", result);
-			if (result.getManageValue() == 0) {
+			if (result.getManageValue().equals("member")) {
 				// 일반회원
 				return "redirect:cart";
 			} else {
-				return "redirect:managerHomeProc?pageNum=1";
+				return "redirect:managerHomeProc";
 			}
 		} else {
 			// 로그인 실패
@@ -131,7 +134,7 @@ public class MemberController {
 	
 	
 	@RequestMapping(value="managerHomeProc")
-	public String managerHomeProc(HttpServletRequest req, Model model, int pageNum) {
+	public String managerHomeProc(HttpServletRequest req, Model model,@RequestParam(required = false) Integer pageNum) {
 		HttpSession session = req.getSession();
 		Member member = (Member) session.getAttribute("member");
 
@@ -139,11 +142,16 @@ public class MemberController {
 
 			return "redirect:login";
 		} else {
-			if (member.getManageValue() == 0) {
+			if (member.getManageValue().equals("member")) {
 				return "redirect:cart";
 			}
 
 			List<Member> memberList;
+			
+			//로그인 직후 pageNum
+			if( pageNum ==  null) {
+				pageNum=1;
+			}
 
 			
 			memberList = mLG.getMemberList(pageNum);
@@ -162,16 +170,36 @@ public class MemberController {
 	}
 
 	@RequestMapping("superManagerProc")
-	public String superManagerProc( HttpServletRequest req) {
+	public String superManagerProc( HttpServletRequest req,@RequestParam(required = false) Integer pageNum) {
 		HttpSession session = req.getSession(false);
 		Member member = (Member) session.getAttribute("member");
 		if (member != null) {
-			if (member.getManageValue() == 2) {
+			if (member.getManageValue().equals("superManager")) {
 				// 수퍼매니저 -> 접근 허락
+				
+				List<Member> managerList;
+				
+				//로그인 직후 pageNum
+				if( pageNum ==  null) {
+					pageNum=1;
+				}
+
+				
+				managerList = maLG.getManagerList(pageNum);
+				
+
+				int pageScope = maLG.getPageScope();
+				int total = maLG.getTotal(); // 전체 row수
+
+				session.setAttribute("managerList", managerList);
+				session.setAttribute("scope", pageScope);
+				session.setAttribute("total", total);
+				session.setAttribute("pageNum", pageNum);
+				
 				return "redirect:superManager";
-			} else if (member.getManageValue() == 1) {
+			} else if (member.getManageValue().equals("manager")) {
 				// 접근불가
-				return "redirect:managerHomeProc?pageNum=1";
+				return "redirect:managerHomeProc";
 			} else {
 				return "redirect:cart";
 			}
@@ -184,9 +212,9 @@ public class MemberController {
 
 	@RequestMapping("managerRegistProc")
 	public String managerRegistProc(Model model, Member member) {
-		int result = 0;
-		result = managerRS.managerRegister(member);
-		if (result == 1) {
+		boolean isSuccess;
+		isSuccess = managerRS.managerRegister(member);
+		if (isSuccess) {
 			// 메니저 회원가입 성공
 			model.addAttribute("msg", "회원가입 성공");
 			return "redirect:superManager";
