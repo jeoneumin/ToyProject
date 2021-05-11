@@ -1,12 +1,13 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<% response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+<%
+	response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
 	response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
 	response.setHeader("Expires", "0"); // Proxies.
 %>
 <c:if test="${empty member }">
-	<c:redirect url="${url }login"/>
+	<c:redirect url="${url }login" />
 </c:if>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:url value="/" var="url" />
@@ -144,11 +145,10 @@
 									</div>
 								</li>
 								<li><a href="#"><span class="flaticon-user"></span></a></li>
-								<li><a href="#"><span
-										class="flaticon-shopping-cart"></span></a></li>
+								<li><a href="#"><span class="flaticon-shopping-cart"></span></a></li>
 							</ul>
 						</div>
-						
+
 						<c:if test="${member }==null">
 							<c:redirect url="${url }/login"></c:redirect>
 						</c:if>
@@ -192,7 +192,8 @@
 					<table class="table">
 						<thead>
 							<tr>
-								<th scope="col">memberId</th>
+								<th scope="col">choice</th>
+								<th scope="col">managerId</th>
 								<th scope="col">userName</th>
 								<th scope="col">pw</th>
 								<th scope="col">answer</th>
@@ -205,6 +206,7 @@
 								<c:forEach var="item" items="${managerListItem }" begin="0"
 									end="${fn:length(managerList) }" step="1" varStatus="status">
 									<tr>
+										<td><input type="checkbox" name="user_CheckBox"></td>
 										<td>${item.memberId }</td>
 										<td>${item.userName }</td>
 										<td>${item.pw }</td>
@@ -225,7 +227,7 @@
 
 						</tbody>
 					</table>
-					
+
 					<div
 						style="text-align: center; margin-top: 20px; margin-bottom: 20px;">
 						<c:if test="${pre eq 'true'}">
@@ -236,10 +238,13 @@
 							step="1">
 							<c:if test="${num <= lastPage }">
 								<c:if test="${num == pageNum }">
-									<strong><a href="${url }managerHomeProc?pageNum=${num}" style="color: black">${num }</a></strong>
+									<strong><a
+										href="${url }managerHomeProc?pageNum=${num}"
+										style="color: black">${num }</a></strong>
 								</c:if>
 								<c:if test="${num != pageNum }">
-								<a href="${url }managerHomeProc?pageNum=${num}" style="color: black">${num }</a>
+									<a href="${url }managerHomeProc?pageNum=${num}"
+										style="color: black">${num }</a>
 								</c:if>
 							</c:if>
 						</c:forEach>
@@ -248,12 +253,12 @@
 								style="color: black">[next]</a>
 						</c:if>
 					</div>
-					
+
 					<div class="checkout_btn_inner float-right">
-						<a class="btn_1" href="#">Update Manager</a> <a
-							class="btn_1 checkout_btn_1" href="#">Delete Manager</a>
-							<a
-							class="btn_1 checkout_btn_1" href="${url }managerRegistration">Insert Manager</a>
+						<button class="btn_1" id="updateBtn">Update Member</button> <button
+							class="btn_1 checkout_btn_1" id="deleteBtn">Delete Member</button> <button
+							class="btn_1 checkout_btn_1" onclick="location.href='${url }managerRegistration';">Insert
+							Manager</button>
 					</div>
 				</div>
 			</div>
@@ -274,39 +279,81 @@
 
 	<!-- JS here -->
 
+	<!-- jquery CDN -->
+	<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 	<script
-		src="./${path}/resources/assets/js/vendor/modernizr-3.5.0.min.js"></script>
+		src="${path}/resources/assets/js/vendor/modernizr-3.5.0.min.js"></script>
 	<!-- Jquery, Popper, Bootstrap -->
-	<script src="./${path}/resources/assets/js/vendor/jquery-1.12.4.min.js"></script>
-	<script src="./${path}/resources/assets/js/popper.min.js"></script>
-	<script src="./${path}/resources/assets/js/bootstrap.min.js"></script>
+	<script src="${path}/resources/assets/js/vendor/jquery-1.12.4.min.js"></script>
+	<script src="${path}/resources/assets/js/popper.min.js"></script>
+	<script src="${path}/resources/assets/js/bootstrap.min.js"></script>
 	<!-- Jquery Mobile Menu -->
-	<script src="./${path}/resources/assets/js/jquery.slicknav.min.js"></script>
+	<script src="${path}/resources/assets/js/jquery.slicknav.min.js"></script>
 
 	<!-- Jquery Slick , Owl-Carousel Plugins -->
-	<script src="./${path}/resources/assets/js/owl.carousel.min.js"></script>
-	<script src="./${path}/resources/assets/js/slick.min.js"></script>
+	<script src="${path}/resources/assets/js/owl.carousel.min.js"></script>
+	<script src="${path}/resources/assets/js/slick.min.js"></script>
 
 	<!-- One Page, Animated-HeadLin -->
-	<script src="./${path}/resources/assets/js/wow.min.js"></script>
-	<script src="./${path}/resources/assets/js/animated.headline.js"></script>
+	<script src="${path}/resources/assets/js/wow.min.js"></script>
+	<script src="${path}/resources/assets/js/animated.headline.js"></script>
 
 	<!-- Scrollup, nice-select, sticky -->
-	<script src="./${path}/resources/assets/js/jquery.scrollUp.min.js"></script>
-	<script src="./${path}/resources/assets/js/jquery.nice-select.min.js"></script>
-	<script src="./${path}/resources/assets/js/jquery.sticky.js"></script>
-	<script src="./${path}/resources/assets/js/jquery.magnific-popup.js"></script>
+	<script src="${path}/resources/assets/js/jquery.scrollUp.min.js"></script>
+	<script src="${path}/resources/assets/js/jquery.nice-select.min.js"></script>
+	<script src="${path}/resources/assets/js/jquery.sticky.js"></script>
+	<script src="${path}/resources/assets/js/jquery.magnific-popup.js"></script>
 
 	<!-- contact js -->
-	<script src="./${path}/resources/assets/js/contact.js"></script>
-	<script src="./${path}/resources/assets/js/jquery.form.js"></script>
-	<script src="./${path}/resources/assets/js/jquery.validate.min.js"></script>
-	<script src="./${path}/resources/assets/js/mail-script.js"></script>
-	<script src="./${path}/resources/assets/js/jquery.ajaxchimp.min.js"></script>
+	<script src="${path}/resources/assets/js/contact.js"></script>
+	<script src="${path}/resources/assets/js/jquery.form.js"></script>
+	<script src="${path}/resources/assets/js/jquery.validate.min.js"></script>
+	<script src="${path}/resources/assets/js/mail-script.js"></script>
+	<script src="${path}/resources/assets/js/jquery.ajaxchimp.min.js"></script>
 
 	<!-- Jquery Plugins, main Jquery -->
-	<script src="./${path}/resources/assets/js/plugins.js"></script>
-	<script src="./${path}/resources/assets/js/main.js"></script>
+	<script src="${path}/resources/assets/js/plugins.js"></script>
+	<script src="${path}/resources/assets/js/main.js"></script>
+	
+	<!--사용자정의함수  -->
+	<script>
+	$("#deleteBtn").click(function(){
+		var path = "${path}/managerDeleteProc";
+		var managerIdArr = new Array();
+		var checkbox = $("input[name=user_CheckBox]:checked");
+		
+		checkbox.each(function(i) {
+			var tr = checkbox.parent().parent().eq(i);
+			var td = tr.children();
+			
+			var managerId = td.eq(1).text();
+			
+			
+			managerIdArr.push(managerId);
+		});
+		
+		sendManagerIdArr(path,managerIdArr);
+		
+	});
+	</script>
+	
+	<script>
+	function sendManagerIdArr(path,arrData){
+		var form = document.createElement('form');
+		form.setAttribute('method','post');
+		form.setAttribute('action',path);
+		document.charset = "utf-8";
+		
+		var managerIdArr = document.createElement('input');
+		managerIdArr.setAttribute('type','hidden');
+		managerIdArr.setAttribute('name', 'managerIdArr');
+		managerIdArr.setAttribute('value',arrData);
+		form.appendChild(managerIdArr);
+		
+		document.body.appendChild(form);
+		form.submit();
+	}
+	</script>
 
 </body>
 </html>

@@ -19,8 +19,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.spring.test2.dao.MemberDao;
 import com.spring.test2.dto.Member;
+import com.spring.test2.service.ManagerDeleteService;
 import com.spring.test2.service.ManagerListGet;
 import com.spring.test2.service.ManagerRegisterService;
+import com.spring.test2.service.MemberDeleteService;
 import com.spring.test2.service.MemberListGet;
 import com.spring.test2.service.MemberLoginService;
 import com.spring.test2.service.MemberRegisterService;
@@ -37,11 +39,16 @@ public class MemberController {
 	@Autowired
 	private MemberLoginService mls;
 	@Autowired
-	private ManagerRegisterService managerRS;
-	@Autowired
 	private MemberListGet mLG;
 	@Autowired
+	private MemberDeleteService mds;
+	@Autowired
+	private ManagerRegisterService managerRS;
+	@Autowired
 	private ManagerListGet maLG;
+	@Autowired
+	private ManagerDeleteService mads;
+
 
 	@RequestMapping("/")
 	public String home() {
@@ -224,6 +231,63 @@ public class MemberController {
 			return "redirect:managerRegistration";
 		}
 
+	}
+	
+	
+	
+	@RequestMapping("memberDeleteProc")
+	public String memberDeleteProc(HttpServletRequest req) {
+		
+		boolean isSuccess=false;
+		
+		String[] stData=req.getParameterValues("memberIdArr");
+		
+		if(stData == null) {
+			//넘어온 데이터 없음
+			System.out.println("넘어온 memberIdArr 없음");
+			return "forward:managerHomeProc";
+		}
+		
+		System.out.println("stData: "+ stData[0]);
+		
+		String[] memberIdArr = stData[0].split(",");
+		
+		for(String memberId:memberIdArr) {
+			isSuccess = mds.deleteMember(memberId);
+			if(!isSuccess) {
+				System.out.println(memberId+"삭제 실패");
+				return "forward:managerHomeProc";
+			}
+		}
+		
+		return "forward:managerHomeProc";
+	}
+	
+	@RequestMapping("managerDeleteProc")
+	public String managerDeleteProc(HttpServletRequest req) {
+		boolean isSuccess=false;
+		
+		String[] stData=req.getParameterValues("managerIdArr");
+		
+		if(stData == null) {
+			//넘어온 데이터 없음
+			System.out.println("넘어온 managerIdArr 없음");
+			return "forward:managerHomeProc";
+		}
+		
+		System.out.println("stData: "+ stData[0]);
+		
+		String[] managerIdArr = stData[0].split(",");
+		
+		for(String managerId:managerIdArr) {
+			isSuccess = mads.deleteManager(managerId);
+			if(!isSuccess) {
+				System.out.println(managerId+"삭제 실패");
+				return "forward:superManagerProc";
+			}
+		}
+		
+		return "forward:superManagerProc";
 	}
 
 	

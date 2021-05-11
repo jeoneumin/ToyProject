@@ -184,9 +184,10 @@
 		<div class="container">
 			<div class="cart_inner">
 				<div class="table-responsive">
-					<table class="table" id="memTable">
+					<table class="table">
 						<thead>
 							<tr>
+								<th scope="col">choice</th>
 								<th scope="col">memberId</th>
 								<th scope="col">userName</th>
 								<th scope="col">password</th>
@@ -200,6 +201,7 @@
 								<c:forEach var="item" items="${memberListItem }" begin="0"
 									end="${fn:length(memberList) }" step="1" varStatus="status">
 									<tr>
+										<td><input type="checkbox" name="user_CheckBox"></td>
 										<td>${item.memberId }</td>
 										<td>${item.userName }</td>
 										<td>${item.pw }</td>
@@ -243,12 +245,12 @@
 					</div>
 
 					<div class="checkout_btn_inner float-right">
-						<button class="btn_1" onclick="checkbox();">Update Member</button> <button
-							class="btn_1 checkout_btn_1" onclick="#">Delete Member</button> <button
+						<button class="btn_1" id="updateBtn">Update Member</button> <button
+							class="btn_1 checkout_btn_1" id="deleteBtn">Delete Member</button> <button
 							class="btn_1 checkout_btn_1" onclick="location.href='${url }superManagerProc';" >Manage
 							Manager</button>
 					</div>
-				</div>
+				 </div>
 			</div>
 	</section>
 	<!--================End Cart Area =================--> </main>
@@ -267,48 +269,112 @@
 
 	<!-- JS here -->
 
+	<!-- jquery CDN -->
+	<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+	
 	<script
-		src="./${path}/resources/assets/js/vendor/modernizr-3.5.0.min.js"></script>
+		src="${path}/resources/assets/js/vendor/modernizr-3.5.0.min.js"></script>
 	<!-- Jquery, Popper, Bootstrap -->
-	<script src="./${path}/resources/assets/js/vendor/jquery-1.12.4.min.js"></script>
-	<script src="./${path}/resources/assets/js/popper.min.js"></script>
-	<script src="./${path}/resources/assets/js/bootstrap.min.js"></script>
+	<script src="${path}/resources/assets/js/vendor/jquery-1.12.4.min.js"></script>
+	<script src="${path}/resources/assets/js/popper.min.js"></script>
+	<script src="${path}/resources/assets/js/bootstrap.min.js"></script>
 	<!-- Jquery Mobile Menu -->
-	<script src="./${path}/resources/assets/js/jquery.slicknav.min.js"></script>
+	<script src="${path}/resources/assets/js/jquery.slicknav.min.js"></script>
 
 	<!-- Jquery Slick , Owl-Carousel Plugins -->
-	<script src="./${path}/resources/assets/js/owl.carousel.min.js"></script>
-	<script src="./${path}/resources/assets/js/slick.min.js"></script>
+	<script src="${path}/resources/assets/js/owl.carousel.min.js"></script>
+	<script src="${path}/resources/assets/js/slick.min.js"></script>
 
 	<!-- One Page, Animated-HeadLin -->
-	<script src="./${path}/resources/assets/js/wow.min.js"></script>
-	<script src="./${path}/resources/assets/js/animated.headline.js"></script>
+	<script src="${path}/resources/assets/js/wow.min.js"></script>
+	<script src="${path}/resources/assets/js/animated.headline.js"></script>
 
 	<!-- Scrollup, nice-select, sticky -->
-	<script src="./${path}/resources/assets/js/jquery.scrollUp.min.js"></script>
-	<script src="./${path}/resources/assets/js/jquery.nice-select.min.js"></script>
-	<script src="./${path}/resources/assets/js/jquery.sticky.js"></script>
-	<script src="./${path}/resources/assets/js/jquery.magnific-popup.js"></script>
+	<script src="${path}/resources/assets/js/jquery.scrollUp.min.js"></script>
+	<script src="${path}/resources/assets/js/jquery.nice-select.min.js"></script>
+	<script src="${path}/resources/assets/js/jquery.sticky.js"></script>
+	<script src="${path}/resources/assets/js/jquery.magnific-popup.js"></script>
 
 	<!-- contact js -->
-	<script src="./${path}/resources/assets/js/contact.js"></script>
-	<script src="./${path}/resources/assets/js/jquery.form.js"></script>
-	<script src="./${path}/resources/assets/js/jquery.validate.min.js"></script>
-	<script src="./${path}/resources/assets/js/mail-script.js"></script>
-	<script src="./${path}/resources/assets/js/jquery.ajaxchimp.min.js"></script>
+	<script src="${path}/resources/assets/js/contact.js"></script>
+	<script src="${path}/resources/assets/js/jquery.form.js"></script>
+	<script src="${path}/resources/assets/js/jquery.validate.min.js"></script>
+	<script src="${path}/resources/assets/js/mail-script.js"></script>
+	<script src="${path}/resources/assets/js/jquery.ajaxchimp.min.js"></script>
 
 	<!-- Jquery Plugins, main Jquery -->
-	<script src="./${path}/resources/assets/js/plugins.js"></script>
-	<script src="./${path}/resources/assets/js/main.js"></script>
+	<script src="${path}/resources/assets/js/plugins.js"></script>
+	<script src="${path}/resources/assets/js/main.js"></script>
 	
 	<!-- 사용자정의함수 -->
 	<script>
-	function checkbox() {
-		var table = document.getElementById('memTable');
-		var newCell = table.rows[i].insertCell(0);
-		newCell.innerText = 'New';
+	$("#updateBtn").click(function(){
+		var rowData = new Array();
+		var tdArr = new Array();
+		var checkbox = $("input[name=user_CheckBox]:checked");
+		
+		checkbox.each(function(i) {
+			var tr = checkbox.parent().parent().eq(i);
+			var td = tr.children();
+			
+			rowData.push(tr.text());
+			
+			var no = td.eq(1).text()+", ";
+			var userid = td.eq(2).text()+", ";
+			var name = td.eq(3).text()+", ";
+			var email = td.eq(4).text()+", ";
+			
+			tdArr.push(no);
+			tdArr.push(userid);
+			tdArr.push(name);
+			tdArr.push(email);
+		});
+	
+		$("#ex_Result1").html(" * 체크된 Row의 모든 데이터 = "+rowData);
+		$("#ex_Result2").html(tdArr);
+	});
+	</script>
+	
+	<script>
+	$("#deleteBtn").click(function(){
+		var path = "${path}/memberDeleteProc";
+		var memberIdArr = new Array();
+		var checkbox = $("input[name=user_CheckBox]:checked");
+		
+		checkbox.each(function(i) {
+			var tr = checkbox.parent().parent().eq(i);
+			var td = tr.children();
+			
+			var memberId = td.eq(1).text();
+			
+			
+			memberIdArr.push(memberId);
+		});
+		
+		sendMemberIdArr(path,memberIdArr);
+		
+	});
+	</script>
+	
+	<script>
+	function sendMemberIdArr(path,arrData){
+		var form = document.createElement('form');
+		form.setAttribute('method','post');
+		form.setAttribute('action',path);
+		document.charset = "utf-8";
+		
+		var memberIdArr = document.createElement('input');
+		memberIdArr.setAttribute('type','hidden');
+		memberIdArr.setAttribute('name', 'memberIdArr');
+		memberIdArr.setAttribute('value',arrData);
+		form.appendChild(memberIdArr);
+		
+		document.body.appendChild(form);
+		form.submit();
 	}
 	</script>
+	
+	
 
 </body>
 </html>

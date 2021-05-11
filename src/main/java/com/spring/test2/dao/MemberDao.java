@@ -153,5 +153,27 @@ public class MemberDao  {
 		total = jdbcTemplate.queryForObject(sql, Integer.class,"manager");
 		return total;
 	}
+	
+	public boolean memberDeleteByMemberId(String memberId) {
+		boolean isSuccess;
+		int result=0; //업데이트쿼리로인해 바뀐 행수
+		String sql = "delete from MEMBER where memberid = ?";
+		try {
+			result=jdbcTemplate.update(sql, memberId);
+		}catch (Exception e) {
+			// TODO: handle exception
+			isSuccess = false;
+		}
+		if(result == 1) {
+			isSuccess = true;
+			return isSuccess;
+		}
+		
+		isSuccess = false;
+		
+		
+		return isSuccess;
+		
+	}
 
 }
