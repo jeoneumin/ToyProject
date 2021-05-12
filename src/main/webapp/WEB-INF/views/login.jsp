@@ -7,6 +7,7 @@
 	response.setHeader("Expires", "0"); // Proxies.
 %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
+<%-- 내일 처음 실행시 ${path }와 같게 value를 설정하고 다시 실행해보기 --%>
 <c:url value="/" var="url" />
 <!doctype html>
 <html lang="zxx">

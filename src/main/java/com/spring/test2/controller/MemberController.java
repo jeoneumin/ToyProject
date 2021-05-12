@@ -128,7 +128,7 @@ public class MemberController {
 				// 일반회원
 				return "redirect:cart";
 			} else {
-				return "redirect:managerHomeProc";
+				return "forward:managerHomeProc";
 			}
 		} else {
 			// 로그인 실패
@@ -141,8 +141,9 @@ public class MemberController {
 	
 	
 	@RequestMapping(value="managerHomeProc")
-	public String managerHomeProc(HttpServletRequest req, Model model,@RequestParam(required = false) Integer pageNum) {
-		HttpSession session = req.getSession();
+	public String managerHomeProc(HttpSession session, Model model,@RequestParam(required = false) Integer pageNum) {
+		/*HttpSession session = req.getSession();
+		Member member = (Member) session.getAttribute("member");*/
 		Member member = (Member) session.getAttribute("member");
 
 		if ((member == null)) {
@@ -233,7 +234,15 @@ public class MemberController {
 
 	}
 	
-	
+	@RequestMapping("memberUpdateProc")
+	public String memberUpdateProc() {
+		
+		//데이터받기
+		
+		//데이터처리하기
+		
+		return "forward:managerHomeProc";
+	}
 	
 	@RequestMapping("memberDeleteProc")
 	public String memberDeleteProc(HttpServletRequest req) {

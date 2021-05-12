@@ -24,21 +24,21 @@
 			</thead>
 			<tbody>
 				<tr>
-					<td><input type="checkbox" name="user_CheckBox"></td>
+					<td><input type="checkbox" ></td>
 					<td>1</td>
 					<td>user07</td>
 					<td>NC소프트</td>
 					<td>nc@gmail.com</td>
 				</tr>
 				<tr>
-					<td><input type="checkbox" name="user_CheckBox"></td>
+					<td><input type="checkbox" ></td>
 					<td>2</td>
 					<td>user08</td>
 					<td>넥슨</td>
 					<td>donson@naver.com</td>
 				</tr>
 				<tr>
-					<td><input type="checkbox" name="user_CheckBox"></td>
+					<td><input type="checkbox"></td>
 					<td>3</td>
 					<td>user09</td>
 					<td>넷마블</td>
@@ -46,10 +46,50 @@
 				</tr>
 			</tbody>
 		</table>
-		<div id="ex_Result1"></div>
-		<div id="ex_Result2"></div>
+		<div id="print"></div>
+		<!-- <div id="ex_Result2"></div> -->
 	</div>
+	<!-- <script>
+		$("#selectBtn").click(function(){
+			var rowData = new Array();
+			var tdArr = new Array();
+			var checkbox = $("input[name=user_CheckBox]:checked");
+			
+			checkbox.each(function(i) {
+				var tr = checkbox.parent().parent().eq(i);
+				var td = tr.children();
+				
+				td.eq(1).html("<input type='text' name='Hello'>");
+				
+				/* document.getElementById("tdTag").innerHTML="<input type='text' name='Hello'>"; */
+				
+			});
+		
+			/* $("#ex_Result1").html(" * 체크된 Row의 모든 데이터 = "+rowData);
+			$("#ex_Result2").html(tdArr); */
+		});
+	</script> -->
+	
 	<script>
+		var inputChange = function() {
+			var checkbox = $("input:checked");
+			
+			checkbox.each(function(i){
+				var tr = $(checkbox.parent().parent().eq(i));
+				var td = tr.children();
+				
+				td.eq(2).html("<input type='text' name='user' value='username'/>");
+				td.eq(3).html("<input type='text' name='company' value='companyname'/>");
+			});
+			
+			/* var tr = $("input:checked").parent().parent();
+			var td = tr.$("#print").html("tr is "+tr.eq(1).text()); */
+		};
+		
+		
+		$("#selectBtn").on("click",inputChange);
+	</script>
+	<!-- <script>
 		$("#selectBtn").click(function(){
 			var rowData = new Array();
 			var tdArr = new Array();
@@ -75,6 +115,6 @@
 			$("#ex_Result1").html(" * 체크된 Row의 모든 데이터 = "+rowData);
 			$("#ex_Result2").html(tdArr);
 		});
-	</script>
+	</script> -->
 </body>
 </html>

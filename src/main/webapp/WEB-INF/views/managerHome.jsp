@@ -9,6 +9,7 @@
 	<c:redirect url="${url }login"/>
 </c:if>
 <c:set var="path" value="${pageContext.request.contextPath}" />
+<%-- 내일 처음 실행시 ${path }와 같게 value를 설정하고 다시 실행해보기 --%>
 <c:url var="url" value="/" />
 <!-- pagingNavi에 필요한 변수 설정 -->
 <c:set var="scope" value="${scope}" />
@@ -244,12 +245,13 @@
 						</c:if>
 					</div>
 
-					<div class="checkout_btn_inner float-right">
-						<button class="btn_1" id="updateBtn">Update Member</button> <button
+					<div class="checkout_btn_inner float-right" id="btngroup">
+						<button class="btn_1" id="updateBtn" onclick="inputChange();">Update Member</button> <button
 							class="btn_1 checkout_btn_1" id="deleteBtn">Delete Member</button> <button
 							class="btn_1 checkout_btn_1" onclick="location.href='${url }superManagerProc';" >Manage
 							Manager</button>
 					</div>
+					<div id="print"></div>
 				 </div>
 			</div>
 	</section>
@@ -307,7 +309,7 @@
 	<script src="${path}/resources/assets/js/main.js"></script>
 	
 	<!-- 사용자정의함수 -->
-	<script>
+	<!-- <script>
 	$("#updateBtn").click(function(){
 		var rowData = new Array();
 		var tdArr = new Array();
@@ -333,6 +335,37 @@
 		$("#ex_Result1").html(" * 체크된 Row의 모든 데이터 = "+rowData);
 		$("#ex_Result2").html(tdArr);
 	});
+	</script> -->
+	
+	<script>
+		var inputChange = function() {
+			var checkbox = $("input[name=user_CheckBox]:checked");
+			
+			checkbox.each(function(i) {
+				var tr = $(checkbox.parent().parent().eq(i));
+				var td = tr.children();
+				
+				var username = td.eq(2).text();
+				var password = td.eq(3).text();
+				var answer = td.eq(4).text();
+			
+				td.eq(2).html("<input type='text' id='test' name='userName' value='"+username+"'/>");
+				td.eq(3).html("<input type='text' name='pw' value='"+password+"'/>");
+				td.eq(4).html("<input type='text' name='answer' value='"+answer+"'/>");
+				
+			});
+			
+			var btn = $("#btngroup").children();
+			/* btn.eq(0).html("<button class='btn_1 checkout_btn_1' >submit</button>");
+			btn.eq(1).html("<button class='btn_1 checkout_btn_1'>cancle</button>"); */
+			btn.eq(0).replaceWith("<button class='btn_1 checkout_btn_1'onclick='updatesubmit();' >submit</button>");
+			btn.eq(1).replaceWith("<button class='btn_1 checkout_btn_1' onclick='cancle();'>cancle</button>");
+			btn.eq(2).remove();
+		};
+		
+		
+		
+		/* $("#updateBtn").on("click",inputChange); */
 	</script>
 	
 	<script>
@@ -354,6 +387,19 @@
 		sendMemberIdArr(path,memberIdArr);
 		
 	});
+	</script>
+	
+	<script >
+		var updatesubmit = function(){
+			var data = $("test");
+			$("print").text(data);
+		};
+	</script>
+	
+	<script >
+		var cancle = function(){
+			window.location.href=${url}+"managerHomeProc";
+		};
 	</script>
 	
 	<script>
