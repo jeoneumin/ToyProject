@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.spring.test2.dao.MemberDao;
@@ -238,38 +239,20 @@ public class MemberController {
 	public String memberUpdateProc() {
 		
 		//데이터받기
-		
+
 		//데이터처리하기
 		
 		return "forward:managerHomeProc";
 	}
 	
+	/*@RequestParam("memberidArr") String[] memberidArr*/
+	@ResponseBody
 	@RequestMapping("memberDeleteProc")
-	public String memberDeleteProc(HttpServletRequest req) {
-		
-		boolean isSuccess=false;
-		
-		String[] stData=req.getParameterValues("memberIdArr");
-		
-		if(stData == null) {
-			//넘어온 데이터 없음
-			System.out.println("넘어온 memberIdArr 없음");
-			return "forward:managerHomeProc";
-		}
-		
-		System.out.println("stData: "+ stData[0]);
-		
-		String[] memberIdArr = stData[0].split(",");
-		
-		for(String memberId:memberIdArr) {
-			isSuccess = mds.deleteMember(memberId);
-			if(!isSuccess) {
-				System.out.println(memberId+"삭제 실패");
-				return "forward:managerHomeProc";
-			}
-		}
-		
-		return "forward:managerHomeProc";
+	public String memberDeleteProc() {
+		//ajax에서 보낸 데이터 받기
+		System.out.println("ajax요청 도착");
+		/*System.out.println("받은값: "+memberidArr[0]+", "+memberidArr[1]);*/
+		return "success";
 	}
 	
 	@RequestMapping("managerDeleteProc")

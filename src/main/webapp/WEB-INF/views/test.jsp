@@ -80,10 +80,25 @@
 				
 				td.eq(2).html("<input type='text' name='user' value='username'/>");
 				td.eq(3).html("<input type='text' name='company' value='companyname'/>");
+				
+				$("#selectBtn").replaceWith("<button onclick='updatesubmit();' >submit</button>");
 			});
 			
 			/* var tr = $("input:checked").parent().parent();
 			var td = tr.$("#print").html("tr is "+tr.eq(1).text()); */
+		};
+		
+		var updatesubmit = function(){
+			var userArray = new Array();
+			$("input[name=user]").each(function(index, item){
+				userArray.push($(item).val());
+			});
+			
+			userArray.forEach(function(value){
+				console.log(value);
+			});
+			
+			
 		};
 		
 		

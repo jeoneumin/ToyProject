@@ -247,7 +247,7 @@
 
 					<div class="checkout_btn_inner float-right" id="btngroup">
 						<button class="btn_1" id="updateBtn" onclick="inputChange();">Update Member</button> <button
-							class="btn_1 checkout_btn_1" id="deleteBtn">Delete Member</button> <button
+							class="btn_1 checkout_btn_1" id="deleteBtn" onclick="sendMemberIdArr();">Delete Member</button> <button
 							class="btn_1 checkout_btn_1" onclick="location.href='${url }superManagerProc';" >Manage
 							Manager</button>
 					</div>
@@ -349,15 +349,13 @@
 				var password = td.eq(3).text();
 				var answer = td.eq(4).text();
 			
-				td.eq(2).html("<input type='text' id='test' name='userName' value='"+username+"'/>");
+				td.eq(2).html("<input type='text' name='userName' value='"+username+"'/>");
 				td.eq(3).html("<input type='text' name='pw' value='"+password+"'/>");
 				td.eq(4).html("<input type='text' name='answer' value='"+answer+"'/>");
 				
 			});
 			
 			var btn = $("#btngroup").children();
-			/* btn.eq(0).html("<button class='btn_1 checkout_btn_1' >submit</button>");
-			btn.eq(1).html("<button class='btn_1 checkout_btn_1'>cancle</button>"); */
 			btn.eq(0).replaceWith("<button class='btn_1 checkout_btn_1'onclick='updatesubmit();' >submit</button>");
 			btn.eq(1).replaceWith("<button class='btn_1 checkout_btn_1' onclick='cancle();'>cancle</button>");
 			btn.eq(2).remove();
@@ -368,7 +366,7 @@
 		/* $("#updateBtn").on("click",inputChange); */
 	</script>
 	
-	<script>
+	<!-- <script>
 	$("#deleteBtn").click(function(){
 		var path = "${path}/memberDeleteProc";
 		var memberIdArr = new Array();
@@ -387,22 +385,24 @@
 		sendMemberIdArr(path,memberIdArr);
 		
 	});
-	</script>
+	</script> -->
 	
-	<script >
+	<!-- <script >
 		var updatesubmit = function(){
-			var data = $("test");
-			$("print").text(data);
+			var userNameArr = new Array();
+			var pwArr = new Array();
+			var answerArr = new Array();
+			$("input[name=userName]").each(function(){
+				userNameArr.push($)
+			});
 		};
-	</script>
-	
-	<script >
+		
 		var cancle = function(){
 			window.location.href=${url}+"managerHomeProc";
 		};
-	</script>
-	
-	<script>
+	</script> -->
+		
+	<!-- <script>
 	function sendMemberIdArr(path,arrData){
 		var form = document.createElement('form');
 		form.setAttribute('method','post');
@@ -417,6 +417,38 @@
 		
 		document.body.appendChild(form);
 		form.submit();
+	}
+	</script> -->
+	
+	<script>
+	function sendMemberIdArr(){
+		var memberIdArr = new Array();
+		var checkbox = $("input[name=user_checkbox]:checked");
+		//아이디 뽑아냄
+		checkbox.each(function(i){
+			var tr = checkbox.parent().parent().eq(i);
+			var td = tr.children();
+			
+			var memberId = td.eq(1).text();
+			
+			memberIdArr.push(memberId);
+		});
+		//제이슨데이터 생성
+		var form ={
+				"memberidArr" : memberIdArr
+		};
+		//ajax로 비동기 처리
+		$.ajax({
+            url: "memberDeleteProc",
+            type: "POST",
+            data: form,
+            success: function(data){
+                alert("success");
+            },
+            error: function(){
+                alert("fail");
+            }
+        });
 	}
 	</script>
 	
