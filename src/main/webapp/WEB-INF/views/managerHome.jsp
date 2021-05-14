@@ -423,35 +423,62 @@
 	<script>
 	function sendMemberIdArr(){
 		var memberIdArr = new Array();
-		var checkbox = $("input[name=user_checkbox]:checked");
+		var checkbox = $("input[name=user_CheckBox]:checked");
+		
+	
 		//아이디 뽑아냄
 		checkbox.each(function(i){
-			var tr = checkbox.parent().parent().eq(i);
+			var tr = $(checkbox.parent().parent().eq(i));
 			var td = tr.children();
 			
-			var memberId = td.eq(1).text();
+			/* data2 = td.eq(1).text(); */
+			var data2 =	td.eq(1).text();
 			
-			memberIdArr.push(memberId);
+			memberIdArr.push(data2);
 		});
-		//제이슨데이터 생성
-		var form ={
-				"memberidArr" : memberIdArr
-		};
+		console.log(memberIdArr[0]);
+		console.log(memberIdArr.length);
+		
+		
+		
+		
 		//ajax로 비동기 처리
-		$.ajax({
+		 $.ajax({
             url: "memberDeleteProc",
             type: "POST",
-            data: form,
+            data: { "id" : memberIdArr },
             success: function(data){
-                alert("success");
+            	console.log(data);
+                if (data == "success"){
+                	console.log("success2");
+                	location.href="managerHomeProc";
+                	alert("memberDelete Success");
+                
+                } else{
+                	console.log("fail");
+                	alert("memberDelete Fail");
+                }
             },
             error: function(){
                 alert("fail");
             }
-        });
+        }); 
 	}
 	</script>
 	
+	<!-- <script type="text/javascript">
+		function test(){
+			var checkbox = $("input[name=user_checkbox]:checked");
+			
+			$("input[name=user_checkbox]:checked").each(function(){
+				var test = $(this).val();
+				console.log(test);
+			});
+			
+			
+		}
+	</script>
+	 -->
 	
 
 </body>

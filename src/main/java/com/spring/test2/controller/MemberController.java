@@ -1,10 +1,13 @@
 package com.spring.test2.controller;
 
 import java.lang.ProcessBuilder.Redirect;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -18,8 +21,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.test2.dao.MemberDao;
 import com.spring.test2.dto.Member;
+import com.spring.test2.dto.MemberId;
 import com.spring.test2.service.ManagerDeleteService;
 import com.spring.test2.service.ManagerListGet;
 import com.spring.test2.service.ManagerRegisterService;
@@ -248,17 +253,37 @@ public class MemberController {
 	/*@RequestParam("memberidArr") String[] memberidArr*/
 	@ResponseBody
 	@RequestMapping("memberDeleteProc")
-	public String memberDeleteProc() {
+	public String memberDeleteProc(@RequestParam(value="id[]") List<String> memberIdArr){
 		//ajax에서 보낸 데이터 받기
 		System.out.println("ajax요청 도착");
+		boolean isSuccess= true;
+		//ObjectMapper mapper = new ObjectMapper();
+		
+		//MemberId value = mapper.readValue(jsonData, MemberId.class);
 		/*System.out.println("받은값: "+memberidArr[0]+", "+memberidArr[1]);*/
-		return "success";
+		//String getData = jsonData;
+		//System.out.println("getData: "+ getData);
+		
+		System.out.println(String.valueOf(memberIdArr));
+		
+		for(String memberId:memberIdArr) {
+			isSuccess = mds.deleteMember(memberId);
+			if(isSuccess == false) break;
+		}
+		
+		if(isSuccess) {
+			return "success";
+		}
+		
+		return "fail";
+		
 	}
 	
 	@RequestMapping("managerDeleteProc")
 	public String managerDeleteProc(HttpServletRequest req) {
 		boolean isSuccess=false;
 		
+	
 		String[] stData=req.getParameterValues("managerIdArr");
 		
 		if(stData == null) {
