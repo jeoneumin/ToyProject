@@ -250,21 +250,12 @@ public class MemberController {
 		return "forward:managerHomeProc";
 	}
 	
-	/*@RequestParam("memberidArr") String[] memberidArr*/
+	
 	@ResponseBody
 	@RequestMapping("memberDeleteProc")
 	public String memberDeleteProc(@RequestParam(value="id[]") List<String> memberIdArr){
-		//ajax에서 보낸 데이터 받기
-		System.out.println("ajax요청 도착");
+
 		boolean isSuccess= true;
-		//ObjectMapper mapper = new ObjectMapper();
-		
-		//MemberId value = mapper.readValue(jsonData, MemberId.class);
-		/*System.out.println("받은값: "+memberidArr[0]+", "+memberidArr[1]);*/
-		//String getData = jsonData;
-		//System.out.println("getData: "+ getData);
-		
-		System.out.println(String.valueOf(memberIdArr));
 		
 		for(String memberId:memberIdArr) {
 			isSuccess = mds.deleteMember(memberId);

@@ -439,9 +439,6 @@
 		console.log(memberIdArr[0]);
 		console.log(memberIdArr.length);
 		
-		
-		
-		
 		//ajax로 비동기 처리
 		 $.ajax({
             url: "memberDeleteProc",
