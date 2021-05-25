@@ -36,5 +36,9 @@ public class MemberListGet {
 		
 		return total;
 	}
+	
+	public int getPageSize() {
+		return this.PAGESIZE;
+	}
 
 }
