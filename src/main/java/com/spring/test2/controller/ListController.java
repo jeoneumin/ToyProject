@@ -72,5 +72,65 @@ public class ListController {
 		}*/
 		return memberList;
 	}
+	
+	@RequestMapping(value = "/list/nextAjax", method = {RequestMethod.POST})
+	@ResponseBody
+	public String[] nextAjax(@RequestParam(value="lastNumAtagValue") String lastNumString) {
+		System.out.println("in nextAjax Controller");
+		System.out.println("lastNumString : " + lastNumString);
+		
+		int lastNum = Integer.parseInt(lastNumString);
+		System.out.println("lastNum " + lastNum);
+		
+		int scope = mlg.getPageScope(); //페이지 범위 크기
+		
+		int startNum = lastNum + 1; //페이지 시작번호
+		/*int endNum = lastNum + scope; */
+		System.out.println("startNum : " + startNum);
+		/*System.out.println("endNUm : " + endNum);*/
+		System.out.println("scope : " + scope);
+		
+		String[] pageNumSet = new String[scope];
+		for(int i = 0;i<scope;i++) {
+			pageNumSet[i] = Integer.toString(startNum + i);
+		}
+		
+		for(int i = 0; i<scope;i++) {
+			System.out.printf("pageNumSet[%d] = %s\n",i,pageNumSet[i]);
+		}
+		
+		
+		return pageNumSet;
+	}
+	
+	@RequestMapping(value="/list/preAjax", method= {RequestMethod.POST})
+	@ResponseBody
+	public String[] preAjax(@RequestParam("navAtagFirst") String firstNumStr) {
+		System.out.println("preAjax controller 요청 받음");
+		System.out.println("전달 데이터(navAtagFirst) : " + firstNumStr);
+		
+		int firstNum = Integer.parseInt(firstNumStr);
+		System.out.println("firstNum : "+ firstNum);
+		
+		int scope = mlg.getPageScope();
+		int startNum = firstNum - scope;
+		System.out.println("scope : " +scope);
+		System.out.println("startNum : " + startNum);
+		String[] aTagScope = new String[scope];
+		System.out.println("aTagScope length : " + aTagScope.length);
+		
+		for(int i=0;i<scope;i++) {
+			aTagScope[i] = Integer.toString(startNum+i);
+		}
+		
+		for(int i=0;i<scope;i++) {
+			System.out.printf("aTagScope[%d] = %s\n" ,i,aTagScope[i]);
+		}
+		
+		
+		
+		return aTagScope;
+	}
+	
 
 }
